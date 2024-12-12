@@ -324,7 +324,7 @@ class IntegracionTransversalidadForm(FlaskForm):
         'IT1. Transversalización de la gestión del riesgo',
         choices=[
             ('0', 'Otras áreas de la empresa no cuentan con procesos en gestión del riesgo'),
-            ('1', 'Solo las áreas cr��ticas de la organización realizan algún proceso de la gestión del riesgo de manera informal, sin una metodología definida'),
+            ('1', 'Solo las áreas criticas de la organización realizan algún proceso de la gestión del riesgo de manera informal, sin una metodología definida'),
             ('2', 'Se lleva a cabo alguno de los procesos de la gestión del riesgo en otras áreas de la empresa, con una metodología establecida'),
             ('3', 'Otras áreas de la organización implementan procedimientos y metodologías específicas para los procesos de gestión del riesgo'),
             ('4', 'Todas las áreas de la organización llevan a cabo la gestión del riesgo con procedimientos y metodologías adaptadas')
@@ -513,7 +513,7 @@ def exportar_pdf(evaluacion_id):
     html = render_template('resultados_pdf.html', evaluacion=evaluacion)
     
     try:
-        # Configuración sin especificar ruta
+        # Configuración básica sin especificar ruta
         options = {
             'page-size': 'A4',
             'margin-top': '0.75in',
