@@ -413,7 +413,7 @@ class OrganizacionForm(FlaskForm):
         'OR3. Personal con dedicación 100% a la gestión del riesgo',
         choices=[
             ('0', 'No existe personal para gestión del riesgo'),
-            ('1', 'Existe una persona encargada pero su dedicación no es completa'),
+            ('1', 'Existe una persona encargada pero su dedicaci��n no es completa'),
             ('2', 'Existe una persona con dedicación completa para la gestión del riesgo'),
             ('3', 'Existe más de una persona con dedicación completa'),
             ('4', 'Cada área cuenta con alguien dedicado a la gestión del riesgo especfica')
@@ -434,7 +434,7 @@ class OrganizacionForm(FlaskForm):
     )
     
     or5_inclusion_gestion = RadioField(
-        'OR5. Inclusión en la Gestión de Riesgo',
+        'OR5. Inclusión en la Gesti��n de Riesgo',
         choices=[
             ('0', 'No se cuenta con diversidad en el reclutamiento de personal ni en el talento humano, no hay equilibrio en el porcentaje de hombres y mujeres de la organización y, un bajo porcentaje de estas esta en puestos directivos'),
             ('1', 'No se cuenta con diversidad de reclutamiento de personal pero el porcentaje de mujeres es mayor al 30%, sin embargo el porcentaje de estas, en puestos directivos, es baja'),
@@ -512,20 +512,19 @@ def exportar_pdf(evaluacion_id):
     evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
     html = render_template('resultados_pdf.html', evaluacion=evaluacion)
     
-    # Configuración para usar wkhtmltopdf instalado en el sistema
-    config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
-    
-    options = {
-        'page-size': 'A4',
-        'margin-top': '0.75in',
-        'margin-right': '0.75in',
-        'margin-bottom': '0.75in',
-        'margin-left': '0.75in',
-        'encoding': "UTF-8",
-        'no-outline': None
-    }
-    
     try:
+        config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
+        
+        options = {
+            'page-size': 'A4',
+            'margin-top': '0.75in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
+        
         pdf = pdfkit.from_string(html, False, options=options, configuration=config)
         stream = io.BytesIO(pdf)
         return send_file(
@@ -534,6 +533,7 @@ def exportar_pdf(evaluacion_id):
             mimetype='application/pdf'
         )
     except Exception as e:
+        app.logger.error(f"Error generando PDF: {str(e)}")
         flash('Error al generar el PDF. Por favor, intente nuevamente.', 'error')
         return redirect(url_for('resultados', evaluacion_id=evaluacion_id))
 
