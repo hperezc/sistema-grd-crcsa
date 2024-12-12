@@ -235,4 +235,124 @@ body {
         margin: 0;
     }
 }
+
+/* Estilos base para botones */
+.btn-lg {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 15px;
+}
+
+/* Estilos para los botones de formulario */
+.form-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-continue {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.btn-continue:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    color: white;
+}
+
+/* Media query para pantallas más grandes */
+@media (min-width: 768px) {
+    .form-buttons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .btn-lg {
+        width: auto;
+        min-width: 200px;
+    }
+}
+
+/* Estilos específicos para el botón de exportar PDF */
+.btn-export-pdf {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: white;
+}
+
+.btn-export-pdf:hover {
+    background-color: #23272b;
+    border-color: #1d2124;
+    color: white;
+}
+
+/* Estilos para la navegación de dimensiones */
+.dimension-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dimension-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.75rem 1rem;
+    color: #6c757d;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.dimension-link.active {
+    background-color: #dc3545;
+    color: white;
+}
+
+.dimension-link:hover:not(.active) {
+    background-color: #dc3545;
+    color: white;
+    opacity: 0.8;
+}
+
+.dimension-link i {
+    font-size: 1.1rem;
+}
+
+.dimension-number {
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+    .dimension-link {
+        font-size: 0.9rem;
+        min-width: 150px;
+    }
+}
  

@@ -2,7 +2,28 @@
 {% from "components/progress_nav.html" import progress_nav %}
 
 {% block content %}
-    {{ progress_nav('procesos', evaluacion) }}
+    <div class="dimension-nav">
+        <a href="{{ url_for('procesos_gestion', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'procesos' %}active{% endif %}">
+            <i class="fas fa-tasks"></i>
+            <span><span class="dimension-number">1.</span> Procesos</span>
+        </a>
+        <a href="{{ url_for('regulaciones_resiliencia', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'regulaciones' %}active{% endif %}">
+            <i class="fas fa-shield-alt"></i>
+            <span><span class="dimension-number">2.</span> Regulaciones</span>
+        </a>
+        <a href="{{ url_for('equipamiento_materiales', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'equipamiento' %}active{% endif %}">
+            <i class="fas fa-tools"></i>
+            <span><span class="dimension-number">3.</span> Equipamiento</span>
+        </a>
+        <a href="{{ url_for('integracion_transversalidad', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'integracion' %}active{% endif %}">
+            <i class="fas fa-network-wired"></i>
+            <span><span class="dimension-number">4.</span> Integración</span>
+        </a>
+        <a href="{{ url_for('organizacion', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'organizacion' %}active{% endif %}">
+            <i class="fas fa-sitemap"></i>
+            <span><span class="dimension-number">5.</span> Organización</span>
+        </a>
+    </div>
     
     <div class="container mt-5 mb-5">
         {% with messages = get_flashed_messages() %}
@@ -58,9 +79,13 @@
                         {% endfor %}
                     </div>
 
-                    <div class="text-center mt-4">
-                        <button type="submit" name="guardar" class="btn btn-secondary btn-lg px-5 me-3">Guardar y Salir</button>
-                        <button type="submit" class="btn btn-primary btn-lg px-5">Guardar y Continuar</button>
+                    <div class="text-center form-buttons">
+                        <button type="submit" name="action" value="save_exit" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-save"></i> Guardar y Salir
+                        </button>
+                        <button type="submit" name="action" value="save_continue" class="btn btn-continue btn-lg">
+                            <i class="fas fa-arrow-right"></i> Guardar y Continuar
+                        </button>
                     </div>
                 </form>
             </div>
