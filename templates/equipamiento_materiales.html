@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "components/progress_nav.html" import progress_nav %}
+
+{% block content %}
+    {{ progress_nav('equipamiento', evaluacion) }}
+    
+    <div class="container mt-5 mb-5">
+        <div class="card shadow">
+            <div class="card-header card-header-cruzroja">
+                <h2 class="text-center mb-0">Equipamiento, Materiales, Insumos y Capacidades Técnicas</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    
+                    <div class="mb-4">
+                        {{ form.empresa.label(class="form-label") }}
+                        {{ form.empresa(class="form-control") }}
+                    </div>
+
+                    <div class="nivel-header">
+                        <div class="row">
+                            <div class="col"><strong>Inexistente (0)</strong></div>
+                            <div class="col"><strong>Incipiente (1)</strong></div>
+                            <div class="col"><strong>Parcial (2)</strong></div>
+                            <div class="col"><strong>Avanzado (3)</strong></div>
+                            <div class="col"><strong>Integrado y transversal (4)</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="component-section">
+                        {% for field in [form.eq1_control_acceso, form.eq2_controles_seguridad,
+                                       form.eq3_controles_ciberseguridad, form.eq4_redes_deteccion,
+                                       form.eq5_brigadas_respuesta, form.eq6_formacion_capacitacion] %}
+                        <div class="component-card mb-4">
+                            <h4>{{ field.label }}</h4>
+                            {% for subfield in field %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input") }}
+                                <label class="form-check-label">
+                                    <span class="nivel-numero">{{ subfield.data }}</span>
+                                    {{ subfield.label.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" name="guardar" class="btn btn-secondary btn-lg px-5 me-3">Guardar y Salir</button>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Guardar y Continuar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

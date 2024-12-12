@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "components/progress_nav.html" import progress_nav %}
+
+{% block content %}
+    {{ progress_nav('regulaciones', evaluacion) }}
+
+    <div class="container mt-5 mb-5">
+        <div class="card shadow">
+            <div class="card-header card-header-cruzroja">
+                <h2 class="text-center mb-0">Regulaciones y Resiliencia</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    
+                    <div class="mb-4">
+                        {{ form.empresa.label(class="form-label") }}
+                        {{ form.empresa(class="form-control") }}
+                    </div>
+
+                    <div class="nivel-header">
+                        <div class="row">
+                            <div class="col"><strong>Inexistente (0)</strong></div>
+                            <div class="col"><strong>Incipiente (1)</strong></div>
+                            <div class="col"><strong>Parcial (2)</strong></div>
+                            <div class="col"><strong>Avanzado (3)</strong></div>
+                            <div class="col"><strong>Integrado y transversal (4)</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="component-section">
+                        <h3>Regulaciones, Resiliencia y Protección Financiera</h3>
+                        
+                        {% for field in [form.pt1_adopcion_certificaciones, form.pt2_regulaciones_nacionales, 
+                                       form.pt3_plan_gestion_riesgo, form.pt4_politica_gestion_riesgo,
+                                       form.pt5_politica_seguridad, form.pt6_sistema_sarlaft,
+                                       form.pt7_memoria_emergencias, form.pt8_planes_emergencia,
+                                       form.pt9_seguros_polizas] %}
+                        <div class="component-card mb-4">
+                            <h4>{{ field.label }}</h4>
+                            {% for subfield in field %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input") }}
+                                <label class="form-check-label">
+                                    <span class="nivel-numero">{{ subfield.data }}</span>
+                                    {{ subfield.label.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" name="guardar" class="btn btn-secondary btn-lg px-5 me-3">Guardar y Salir</button>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Guardar y Continuar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

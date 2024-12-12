@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .empresa-info {
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h4 {
+            color: #dc3545;
+            border-bottom: 2px solid #dc3545;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .resultado-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .resultado-valor {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Resultados de la Evaluación</h2>
+    </div>
+    
+    <div class="empresa-info">
+        <h3>Empresa: {{ evaluacion.empresa }}</h3>
+        <p>Fecha: {{ evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    </div>
+
+    <div class="section">
+        <h4>Procesos de Gestión del Riesgo</h4>
+        <div class="resultado-item">
+            <span>P1. Identificación de amenazas</span>
+            <span class="resultado-valor">{{ evaluacion.p1_identificacion_amenazas if evaluacion.p1_identificacion_amenazas is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P2. Identificación vulnerabilidades</span>
+            <span class="resultado-valor">{{ evaluacion.p2_identificacion_vulnerabilidades if evaluacion.p2_identificacion_vulnerabilidades is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P3. Análisis de riesgos</span>
+            <span class="resultado-valor">{{ evaluacion.p3_analisis_riesgos if evaluacion.p3_analisis_riesgos is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P4. Valoración de riesgos</span>
+            <span class="resultado-valor">{{ evaluacion.p4_valoracion_riesgos if evaluacion.p4_valoracion_riesgos is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P5. Reducción de riesgos</span>
+            <span class="resultado-valor">{{ evaluacion.p5_reduccion_riesgos if evaluacion.p5_reduccion_riesgos is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P6. Monitoreo y revisión</span>
+            <span class="resultado-valor">{{ evaluacion.p6_monitoreo_revision if evaluacion.p6_monitoreo_revision is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P7. Seguimiento a estrategias</span>
+            <span class="resultado-valor">{{ evaluacion.p7_seguimiento_estrategias if evaluacion.p7_seguimiento_estrategias is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>P8. Comunicación y consulta</span>
+            <span class="resultado-valor">{{ evaluacion.p8_comunicacion if evaluacion.p8_comunicacion is not none else '0' }}/4</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Regulaciones, Resiliencia y Protección Financiera</h4>
+        <div class="resultado-item">
+            <span>PT1. Adopción de certificaciones</span>
+            <span class="resultado-valor">{{ evaluacion.pt1_adopcion_certificaciones if evaluacion.pt1_adopcion_certificaciones is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT2. Regulaciones nacionales</span>
+            <span class="resultado-valor">{{ evaluacion.pt2_regulaciones_nacionales if evaluacion.pt2_regulaciones_nacionales is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT3. Plan de Gestión del Riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.pt3_plan_gestion_riesgo if evaluacion.pt3_plan_gestion_riesgo is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT4. Política de Gestión del Riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.pt4_politica_gestion_riesgo if evaluacion.pt4_politica_gestion_riesgo is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT5. Política de Seguridad Operacional</span>
+            <span class="resultado-valor">{{ evaluacion.pt5_politica_seguridad if evaluacion.pt5_politica_seguridad is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT6. Sistema SARLAFT</span>
+            <span class="resultado-valor">{{ evaluacion.pt6_sistema_sarlaft if evaluacion.pt6_sistema_sarlaft is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT7. Memoria de emergencias</span>
+            <span class="resultado-valor">{{ evaluacion.pt7_memoria_emergencias if evaluacion.pt7_memoria_emergencias is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT8. Planes de emergencia</span>
+            <span class="resultado-valor">{{ evaluacion.pt8_planes_emergencia if evaluacion.pt8_planes_emergencia is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>PT9. Seguros y pólizas</span>
+            <span class="resultado-valor">{{ evaluacion.pt9_seguros_polizas if evaluacion.pt9_seguros_polizas is not none else '0' }}/4</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Equipamiento, Materiales, Insumos y Capacidades Técnicas</h4>
+        <div class="resultado-item">
+            <span>EQ1. Control de acceso</span>
+            <span class="resultado-valor">{{ evaluacion.eq1_control_acceso if evaluacion.eq1_control_acceso is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>EQ2. Controles de seguridad física</span>
+            <span class="resultado-valor">{{ evaluacion.eq2_controles_seguridad if evaluacion.eq2_controles_seguridad is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>EQ3. Controles de ciberseguridad</span>
+            <span class="resultado-valor">{{ evaluacion.eq3_controles_ciberseguridad if evaluacion.eq3_controles_ciberseguridad is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>EQ4. Redes/Sistemas de detección</span>
+            <span class="resultado-valor">{{ evaluacion.eq4_redes_deteccion if evaluacion.eq4_redes_deteccion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>EQ5. Brigadas para respuesta</span>
+            <span class="resultado-valor">{{ evaluacion.eq5_brigadas_respuesta if evaluacion.eq5_brigadas_respuesta is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>EQ6. Formación y capacitación</span>
+            <span class="resultado-valor">{{ evaluacion.eq6_formacion_capacitacion if evaluacion.eq6_formacion_capacitacion is not none else '0' }}/4</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Integración y Transversalidad</h4>
+        <div class="resultado-item">
+            <span>IT1. Transversalización de la gestión del riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.it1_transversalizacion if evaluacion.it1_transversalizacion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>IT2. Protocolos de comunicación</span>
+            <span class="resultado-valor">{{ evaluacion.it2_protocolos_comunicacion if evaluacion.it2_protocolos_comunicacion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>IT3. Planes de ayuda mutua</span>
+            <span class="resultado-valor">{{ evaluacion.it3_planes_ayuda if evaluacion.it3_planes_ayuda is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>IT5. Retroalimentación</span>
+            <span class="resultado-valor">{{ evaluacion.it5_retroalimentacion if evaluacion.it5_retroalimentacion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>IT6. Mecanismos de articulación</span>
+            <span class="resultado-valor">{{ evaluacion.it6_mecanismos_articulacion if evaluacion.it6_mecanismos_articulacion is not none else '0' }}/4</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Organización</h4>
+        <div class="resultado-item">
+            <span>OR1. Área de gestión del riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.or1_area_gestion if evaluacion.or1_area_gestion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>OR2. Presupuesto para gestión del riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.or2_presupuesto if evaluacion.or2_presupuesto is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>OR3. Personal con dedicación 100%</span>
+            <span class="resultado-valor">{{ evaluacion.or3_personal_dedicacion if evaluacion.or3_personal_dedicacion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>OR4. Proyectos en gestión del riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.or4_proyectos_gestion if evaluacion.or4_proyectos_gestion is not none else '0' }}/4</span>
+        </div>
+        <div class="resultado-item">
+            <span>OR5. Inclusión en la Gestión de Riesgo</span>
+            <span class="resultado-valor">{{ evaluacion.or5_inclusion_gestion if evaluacion.or5_inclusion_gestion is not none else '0' }}/4</span>
+        </div>
+    </div>
+</body>
+</html> 

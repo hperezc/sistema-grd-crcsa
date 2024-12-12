@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Panel de Administración</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Empresa</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evaluacion in evaluaciones %}
+                <tr>
+                    <td>{{ evaluacion.id }}</td>
+                    <td>{{ evaluacion.empresa }}</td>
+                    <td>{{ evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        {% if evaluacion.estado == 'completo' %}
+                            <span class="badge bg-success">Completo</span>
+                        {% elif evaluacion.estado == 'parcial' %}
+                            <span class="badge bg-warning">Parcial</span>
+                            <br>
+                            <small class="text-muted">Última: {{ evaluacion.ultima_dimension|default('No iniciada') }}</small>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Incompleto</span>
+                        {% endif %}
+                    </td>
+                    <td class="admin-actions">
+                        <a href="{{ url_for('resultados', evaluacion_id=evaluacion.id) }}" class="btn btn-info btn-sm">Ver</a>
+                        <a href="{{ url_for('editar_evaluacion', evaluacion_id=evaluacion.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_evaluacion', id=evaluacion.id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta evaluación?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

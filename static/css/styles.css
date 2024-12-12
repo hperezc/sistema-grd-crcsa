@@ -1,0 +1,238 @@
+:root {
+    --cruzroja-rojo: #ee3224;
+    --cruzroja-gris: #58595b;
+    --cruzroja-rojo-claro: #ff4433;
+    --cruzroja-gris-claro: #f5f5f5;
+}
+
+body {
+    background-color: var(--cruzroja-gris-claro);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-container {
+    background-color: white;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo-container img {
+    height: 70px;
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.progress-indicator {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 2rem;
+}
+
+.progress-step {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 20px;
+    color: #6c757d;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.progress-step:hover {
+    background-color: #e9ecef;
+    color: #E31837;
+    text-decoration: none;
+}
+
+.progress-step.active {
+    background-color: #E31837;
+    color: white;
+}
+
+.progress-step.active:hover {
+    background-color: #cc1630;
+    color: white;
+}
+
+.nivel-header {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+    overflow: hidden;
+}
+
+.nivel-header .col {
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nivel-header .col:hover {
+    background-color: var(--cruzroja-gris-claro);
+    transform: translateY(-2px);
+}
+
+.component-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.component-card h4 {
+    color: var(--cruzroja-rojo);
+    border-bottom: 2px solid var(--cruzroja-rojo);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-check {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-check:hover {
+    background: var(--cruzroja-gris-claro);
+    transform: translateX(5px);
+}
+
+.nivel-numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--cruzroja-rojo);
+    color: white;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-check:hover .nivel-numero {
+    transform: scale(1.1);
+}
+
+.btn-primary {
+    background: var(--cruzroja-rojo);
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(238,50,36,0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: var(--cruzroja-rojo-claro);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(238,50,36,0.4);
+}
+
+.card-header-cruzroja {
+    background-color: var(--cruzroja-rojo);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.progress-step i {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 0.5rem;
+}
+
+.navbar .nav-link i {
+    margin-right: 8px;
+}
+
+.navbar-brand i {
+    margin-right: 8px;
+}
+
+/* Estilos para el dashboard */
+.dashboard-stats {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Grid responsivo para las estadísticas */
+@media (min-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .dashboard-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Estilos para gráficos responsivos */
+.chart-container {
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 767px) {
+    .chart-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+/* Estilos para la tabla del panel de administración */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767px) {
+    .admin-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .admin-actions .btn {
+        width: 100%;
+        margin: 0;
+    }
+}
+ 

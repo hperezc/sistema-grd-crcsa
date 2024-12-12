@@ -1,0 +1,45 @@
+{% macro progress_nav(active_step, evaluacion=None) %}
+<div class="progress-indicator">
+    <div class="row justify-content-center">
+        {% if evaluacion %}
+            <div class="col-auto">
+                <a href="{{ url_for('procesos_gestion', evaluacion_id=evaluacion.id) }}" 
+                   class="progress-step {% if active_step == 'procesos' %}active{% endif %}">
+                    <i class="fas fa-tasks mb-2"></i>
+                    1. Procesos Gestión del Riesgo
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('regulaciones_resiliencia', evaluacion_id=evaluacion.id) }}" 
+                   class="progress-step {% if active_step == 'regulaciones' %}active{% endif %}">
+                    <i class="fas fa-shield-alt mb-2"></i>
+                    2. Regulaciones y Resiliencia
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('equipamiento_materiales', evaluacion_id=evaluacion.id) }}" 
+                   class="progress-step {% if active_step == 'equipamiento' %}active{% endif %}">
+                    <i class="fas fa-tools mb-2"></i>
+                    3. Equipamiento y Materiales
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('integracion_transversalidad', evaluacion_id=evaluacion.id) }}" 
+                   class="progress-step {% if active_step == 'integracion' %}active{% endif %}">
+                    <i class="fas fa-network-wired mb-2"></i>
+                    4. Integración y Transversalidad
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('organizacion', evaluacion_id=evaluacion.id) }}" 
+                   class="progress-step {% if active_step == 'organizacion' %}active{% endif %}">
+                    <i class="fas fa-sitemap mb-2"></i>
+                    5. Organización
+                </a>
+            </div>
+        {% else %}
+            <!-- Enlaces deshabilitados o solo texto -->
+        {% endif %}
+    </div>
+</div>
+{% endmacro %} 
