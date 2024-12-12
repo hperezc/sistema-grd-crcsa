@@ -3,7 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={"expire_on_commit": False})
 
 class Evaluacion(db.Model):
     __tablename__ = 'evaluacion'
