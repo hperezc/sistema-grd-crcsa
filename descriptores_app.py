@@ -324,7 +324,7 @@ class IntegracionTransversalidadForm(FlaskForm):
         'IT1. Transversalización de la gestión del riesgo',
         choices=[
             ('0', 'Otras áreas de la empresa no cuentan con procesos en gestión del riesgo'),
-            ('1', 'Solo las áreas críticas de la organización realizan algún proceso de la gestión del riesgo de manera informal, sin una metodología definida'),
+            ('1', 'Solo las áreas cr��ticas de la organización realizan algún proceso de la gestión del riesgo de manera informal, sin una metodología definida'),
             ('2', 'Se lleva a cabo alguno de los procesos de la gestión del riesgo en otras áreas de la empresa, con una metodología establecida'),
             ('3', 'Otras áreas de la organización implementan procedimientos y metodologías específicas para los procesos de gestión del riesgo'),
             ('4', 'Todas las áreas de la organización llevan a cabo la gestión del riesgo con procedimientos y metodologías adaptadas')
@@ -413,7 +413,7 @@ class OrganizacionForm(FlaskForm):
         'OR3. Personal con dedicación 100% a la gestión del riesgo',
         choices=[
             ('0', 'No existe personal para gestión del riesgo'),
-            ('1', 'Existe una persona encargada pero su dedicaci��n no es completa'),
+            ('1', 'Existe una persona encargada pero su dedicación no es completa'),
             ('2', 'Existe una persona con dedicación completa para la gestión del riesgo'),
             ('3', 'Existe más de una persona con dedicación completa'),
             ('4', 'Cada área cuenta con alguien dedicado a la gestión del riesgo especfica')
@@ -434,7 +434,7 @@ class OrganizacionForm(FlaskForm):
     )
     
     or5_inclusion_gestion = RadioField(
-        'OR5. Inclusión en la Gesti��n de Riesgo',
+        'OR5. Inclusión en la Gestión de Riesgo',
         choices=[
             ('0', 'No se cuenta con diversidad en el reclutamiento de personal ni en el talento humano, no hay equilibrio en el porcentaje de hombres y mujeres de la organización y, un bajo porcentaje de estas esta en puestos directivos'),
             ('1', 'No se cuenta con diversidad de reclutamiento de personal pero el porcentaje de mujeres es mayor al 30%, sin embargo el porcentaje de estas, en puestos directivos, es baja'),
@@ -513,8 +513,7 @@ def exportar_pdf(evaluacion_id):
     html = render_template('resultados_pdf.html', evaluacion=evaluacion)
     
     try:
-        config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
-        
+        # Configuración sin especificar ruta
         options = {
             'page-size': 'A4',
             'margin-top': '0.75in',
@@ -525,7 +524,7 @@ def exportar_pdf(evaluacion_id):
             'no-outline': None
         }
         
-        pdf = pdfkit.from_string(html, False, options=options, configuration=config)
+        pdf = pdfkit.from_string(html, False, options=options)
         stream = io.BytesIO(pdf)
         return send_file(
             stream,
