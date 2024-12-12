@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired
 from models import db, Evaluacion, Admin
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from dashboard import init_dashboard
-import pdfkit
-import io
+from weasyprint import HTML
+from io import BytesIO
 from flask_migrate import Migrate
 import os
 
@@ -34,7 +34,7 @@ class ProcesosGestionForm(FlaskForm):
             ('0', 'No se conocen las amenazas en la organización'),
             ('1', 'Las amenazas están identificadas sin metodología definida (inspeccion visual, experiencia, informalmente)'),
             ('2', 'Las amenazas se encuentran identificadas a traves de metodologia definida y adoptada en la organización'),
-            ('3', 'Las amenazas se identifican a traves un analisis detallado, con una metodologia cuantitativa y se actualizan según los cambios en el tiempo de esta.'),
+            ('3', 'Las amenazas se identifican a traves un analisis detallado, con una metodologia cuantitativa y se actualizan seg��n los cambios en el tiempo de esta.'),
             ('4', 'La metodologia definida y adoptada por la organización, se aplica a otras a areas de la organización con las modificaciones respectivas.')
         ],
         validators=[DataRequired()]
@@ -513,19 +513,13 @@ def exportar_pdf(evaluacion_id):
     html = render_template('resultados_pdf.html', evaluacion=evaluacion)
     
     try:
-        # Configuración básica sin especificar ruta
-        options = {
-            'page-size': 'A4',
-            'margin-top': '0.75in',
-            'margin-right': '0.75in',
-            'margin-bottom': '0.75in',
-            'margin-left': '0.75in',
-            'encoding': "UTF-8",
-            'no-outline': None
-        }
+        # Generar PDF usando WeasyPrint
+        pdf = HTML(string=html).write_pdf()
         
-        pdf = pdfkit.from_string(html, False, options=options)
-        stream = io.BytesIO(pdf)
+        # Crear un stream de bytes
+        stream = BytesIO(pdf)
+        
+        # Devolver el PDF como respuesta
         return send_file(
             stream,
             download_name=f'evaluacion_{evaluacion_id}.pdf',
