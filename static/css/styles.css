@@ -291,15 +291,15 @@ body {
 
 /* Estilos específicos para el botón de exportar PDF */
 .btn-export-pdf {
-    background-color: #343a40;
-    border-color: #343a40;
-    color: white;
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    color: white !important;
 }
 
 .btn-export-pdf:hover {
-    background-color: #23272b;
-    border-color: #1d2124;
-    color: white;
+    background-color: #1a1e21 !important;
+    border-color: #1a1e21 !important;
+    color: white !important;
 }
 
 /* Estilos para la navegación de dimensiones */

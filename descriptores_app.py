@@ -338,7 +338,7 @@ class IntegracionTransversalidadForm(FlaskForm):
             ('0', 'No existen protocolos de comunicación en la organización para la gestión del riesgo, ni estos cuentan con un componentes de inclusividad y diversidad en su elaboración'),
             ('1', 'Solo se realiza momentos de comunicación y divulgación, con enfoque de seguridad y gestión del riesgo una vez suceden eventos de emergencia. No se toma en cuenta la diversidad e inclusión para divulgar estos momentos.'),
             ('2', 'Existen medios y canales definidos para la comunicación de emergencia-gestión del riesgo, interna y externa de la organización y estos son utilizados para transmitir mensajes de seguridad o gestión del riesgo. Se toma en cuenta algunas poblaciones con necesidades especiales.'),
-            ('3', 'Existen protocolos de comunicación de emergencia o gestión del riesgo a nivel interno y externo. Existe un área dedicada a su elaboración, redacción, emisión interna y externa con enfoque inclusivo. Gran parte de los receptores de esta comunicación son tenidos en cuenta para la elaboración de los contenidos y su difusión'),
+            ('3', 'Existen protocolos de comunicación de emergencia o gestión del riesgo a nivel interno y externo. Existe un área dedicada a su elaboración, redacci��n, emisión interna y externa con enfoque inclusivo. Gran parte de los receptores de esta comunicación son tenidos en cuenta para la elaboración de los contenidos y su difusión'),
             ('4', 'El área dedicada cuenta con protocolos de comunicaciones para eventos de emergencia en cada situación presentados, se encuentra formada en la terminología específica y se articula con las entidades además de comunidad. Se utilizan estrategias específicas inclusivas donde se toma en cuenta la diversidad de la población objetivo')
         ],
         validators=[DataRequired()]
@@ -487,7 +487,7 @@ def procesos_gestion(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('procesos_gestion.html', form=form, evaluacion=evaluacion)
+    return render_template('procesos_gestion.html', form=form, evaluacion=evaluacion, active_dimension='procesos')
 
 @app.route('/resultados/<int:evaluacion_id>')
 def resultados(evaluacion_id):
@@ -518,7 +518,7 @@ def exportar_pdf(evaluacion_id):
         # Generar PDF usando WeasyPrint
         pdf = HTML(string=html_content).write_pdf()
         
-        # Crear un stream de bytes
+        # Crear stream de bytes
         stream = BytesIO(pdf)
         stream.seek(0)
         
@@ -561,7 +561,7 @@ def regulaciones_resiliencia(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('regulaciones_resiliencia.html', form=form, evaluacion=evaluacion)
+    return render_template('regulaciones_resiliencia.html', form=form, evaluacion=evaluacion, active_dimension='regulaciones')
 
 @app.route('/equipamiento_materiales/<int:evaluacion_id>', methods=['GET', 'POST'])
 def equipamiento_materiales(evaluacion_id):
@@ -590,7 +590,7 @@ def equipamiento_materiales(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('equipamiento_materiales.html', form=form, evaluacion=evaluacion)
+    return render_template('equipamiento_materiales.html', form=form, evaluacion=evaluacion, active_dimension='equipamiento')
 
 @app.route('/integracion_transversalidad/<int:evaluacion_id>', methods=['GET', 'POST'])
 def integracion_transversalidad(evaluacion_id):
@@ -619,7 +619,7 @@ def integracion_transversalidad(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('integracion_transversalidad.html', form=form, evaluacion=evaluacion)
+    return render_template('integracion_transversalidad.html', form=form, evaluacion=evaluacion, active_dimension='integracion')
 
 @app.route('/organizacion/<int:evaluacion_id>', methods=['GET', 'POST'])
 def organizacion(evaluacion_id):
@@ -646,7 +646,7 @@ def organizacion(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('organizacion.html', form=form, evaluacion=evaluacion)
+    return render_template('organizacion.html', form=form, evaluacion=evaluacion, active_dimension='organizacion')
 
 @app.route('/resultados')
 def resultados_lista():
