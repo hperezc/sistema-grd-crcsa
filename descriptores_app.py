@@ -510,10 +510,10 @@ def resultados(evaluacion_id):
 @app.route('/exportar-pdf/<int:evaluacion_id>')
 def exportar_pdf(evaluacion_id):
     evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
-    
     html = render_template('resultados_pdf.html', evaluacion=evaluacion)
     
-    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    # Configuración para usar wkhtmltopdf instalado en el sistema
+    config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
     
     options = {
         'page-size': 'A4',
@@ -522,21 +522,19 @@ def exportar_pdf(evaluacion_id):
         'margin-bottom': '0.75in',
         'margin-left': '0.75in',
         'encoding': "UTF-8",
-        'no-outline': None,
-        'enable-local-file-access': None,
-        'disable-external-links': None
+        'no-outline': None
     }
     
     try:
         pdf = pdfkit.from_string(html, False, options=options, configuration=config)
-        
+        stream = io.BytesIO(pdf)
         return send_file(
-            io.BytesIO(pdf),
-            download_name=f'resultados_{evaluacion.empresa}.pdf',
+            stream,
+            download_name=f'evaluacion_{evaluacion_id}.pdf',
             mimetype='application/pdf'
         )
     except Exception as e:
-        flash(f'Error al generar PDF: {str(e)}', 'error')
+        flash('Error al generar el PDF. Por favor, intente nuevamente.', 'error')
         return redirect(url_for('resultados', evaluacion_id=evaluacion_id))
 
 @app.route('/regulaciones_resiliencia/<int:evaluacion_id>', methods=['GET', 'POST'])
