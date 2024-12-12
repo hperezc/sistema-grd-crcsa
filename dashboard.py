@@ -7,11 +7,18 @@ from flask.helpers import get_root_path
 import dash_bootstrap_components as dbc
 from models import Evaluacion, db
 
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
+
 def init_dashboard(server):
     dash_app = Dash(
         server=server,
-        routes_pathname_prefix="/dashboard/",
-        external_stylesheets=[dbc.themes.BOOTSTRAP]
+        routes_pathname_prefix='/dashboard/',
+        external_stylesheets=[
+            'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'
+        ]
     )
 
     # Obtener datos
