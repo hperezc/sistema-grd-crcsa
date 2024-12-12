@@ -1,0 +1,60 @@
+# Entorno virtual
+venv/
+env/
+Scripts/
+Lib/
+Include/
+.env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Archivos de base de datos
+*.db
+*.sqlite3
+
+# Archivos de log
+*.log
+
+# Archivos de configuración local
+instance/
+.env
+
+# Archivos de caché
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
