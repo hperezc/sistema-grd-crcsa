@@ -28,45 +28,43 @@ def init_dashboard(server):
             'empresa': e.empresa,
             'fecha': e.fecha,
             'estado': e.estado,
-            'procesos_gestion': float(e.p1_identificacion_amenazas or 0)/4 + \
-                               float(e.p2_identificacion_vulnerabilidades or 0)/4 + \
-                               float(e.p3_analisis_riesgos or 0)/4 + \
-                               float(e.p4_valoracion_riesgos or 0)/4 + \
-                               float(e.p5_reduccion_riesgos or 0)/4 + \
-                               float(e.p6_monitoreo_revision or 0)/4 + \
-                               float(e.p7_seguimiento_estrategias or 0)/4 + \
-                               float(e.p8_comunicacion or 0)/4,
-            'regulaciones': float(e.pt1_adopcion_certificaciones or 0)/4 + \
-                           float(e.pt2_regulaciones_nacionales or 0)/4 + \
-                           float(e.pt3_plan_gestion_riesgo or 0)/4 + \
-                           float(e.pt4_politica_gestion_riesgo or 0)/4 + \
-                           float(e.pt5_politica_seguridad or 0)/4 + \
-                           float(e.pt6_sistema_sarlaft or 0)/4 + \
-                           float(e.pt7_memoria_emergencias or 0)/4 + \
-                           float(e.pt8_planes_emergencia or 0)/4 + \
-                           float(e.pt9_seguros_polizas or 0)/4,
-            'equipamiento': float(e.eq1_control_acceso or 0)/4 + \
-                           float(e.eq2_controles_seguridad or 0)/4 + \
-                           float(e.eq3_controles_ciberseguridad or 0)/4 + \
-                           float(e.eq4_redes_deteccion or 0)/4 + \
-                           float(e.eq5_brigadas_respuesta or 0)/4 + \
-                           float(e.eq6_formacion_capacitacion or 0)/4,
-            'integracion': float(e.it1_transversalizacion or 0)/4 + \
-                          float(e.it2_protocolos_comunicacion or 0)/4 + \
-                          float(e.it3_planes_ayuda or 0)/4 + \
-                          float(e.it5_retroalimentacion or 0)/4 + \
-                          float(e.it6_mecanismos_articulacion or 0)/4,
-            'organizacion': float(e.or1_area_gestion or 0)/4 + \
-                           float(e.or2_presupuesto or 0)/4 + \
-                           float(e.or3_personal_dedicacion or 0)/4 + \
-                           float(e.or4_proyectos_gestion or 0)/4 + \
-                           float(e.or5_inclusion_gestion or 0)/4
+            'procesos_gestion': (float(e.p1_identificacion_amenazas or 0) + 
+                               float(e.p2_identificacion_vulnerabilidades or 0) + 
+                               float(e.p3_analisis_riesgos or 0) + 
+                               float(e.p4_valoracion_riesgos or 0) + 
+                               float(e.p5_reduccion_riesgos or 0) + 
+                               float(e.p6_monitoreo_revision or 0) + 
+                               float(e.p7_seguimiento_estrategias or 0) + 
+                               float(e.p8_comunicacion or 0)) / 8,  # Promedio de 8 preguntas
+            'regulaciones': (float(e.pt1_adopcion_certificaciones or 0) + 
+                           float(e.pt2_regulaciones_nacionales or 0) + 
+                           float(e.pt3_plan_gestion_riesgo or 0) + 
+                           float(e.pt4_politica_gestion_riesgo or 0) + 
+                           float(e.pt5_politica_seguridad or 0) + 
+                           float(e.pt6_sistema_sarlaft or 0) + 
+                           float(e.pt7_memoria_emergencias or 0) + 
+                           float(e.pt8_planes_emergencia or 0) + 
+                           float(e.pt9_seguros_polizas or 0)) / 9,  # Promedio de 9 preguntas
+            'equipamiento': (float(e.eq1_control_acceso or 0) + 
+                           float(e.eq2_controles_seguridad or 0) + 
+                           float(e.eq3_controles_ciberseguridad or 0) + 
+                           float(e.eq4_redes_deteccion or 0) + 
+                           float(e.eq5_brigadas_respuesta or 0) + 
+                           float(e.eq6_formacion_capacitacion or 0)) / 6,  # Promedio de 6 preguntas
+            'integracion': (float(e.it1_transversalizacion or 0) + 
+                          float(e.it2_protocolos_comunicacion or 0) + 
+                          float(e.it3_planes_ayuda or 0) + 
+                          float(e.it5_retroalimentacion or 0) + 
+                          float(e.it6_mecanismos_articulacion or 0)) / 5,  # Promedio de 5 preguntas
+            'organizacion': (float(e.or1_area_gestion or 0) + 
+                           float(e.or2_presupuesto or 0) + 
+                           float(e.or3_personal_dedicacion or 0) + 
+                           float(e.or4_proyectos_gestion or 0) + 
+                           float(e.or5_inclusion_gestion or 0)) / 5  # Promedio de 5 preguntas
         } for e in evaluaciones])
         
-        # Filtrar solo evaluaciones completas para los cálculos
         df_completas = df[df['estado'] == 'completo']
-        
-        return df_completas  # Retornar solo las evaluaciones completas
+        return df_completas
 
     # Layout del dashboard
     dash_app.layout = dbc.Container([
