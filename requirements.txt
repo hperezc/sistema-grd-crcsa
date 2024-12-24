@@ -16,3 +16,4 @@ gunicorn==20.1.0
 pdfkit==1.0.0
 flask-mail
 python-dotenv
+email_validator
