@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow">
+<div class="container mt-5" data-aos="fade-up">
+    <div class="card shadow-lg hover-card">
         <div class="card-header card-header-cruzroja">
             <h2 class="text-center mb-0">Nueva Evaluación</h2>
         </div>
@@ -11,10 +11,18 @@
                 {{ form.csrf_token }}
                 <div class="mb-4">
                     {{ form.empresa.label(class="form-label") }}
-                    {{ form.empresa(class="form-control") }}
+                    {{ form.empresa(class="form-control hover-scale", placeholder="Nombre de la empresa") }}
+                </div>
+                <div class="mb-4">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control hover-scale", placeholder="correo@ejemplo.com") }}
+                </div>
+                <div class="mb-4">
+                    {{ form.sector.label(class="form-label") }}
+                    {{ form.sector(class="form-control hover-scale") }}
                 </div>
                 <div class="text-center">
-                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                    {{ form.submit(class="btn btn-primary btn-lg pulse-button") }}
                 </div>
             </form>
         </div>

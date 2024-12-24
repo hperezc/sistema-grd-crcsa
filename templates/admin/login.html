@@ -1,29 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5" data-aos="fade-up">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Panel de Administración</h3>
+            <div class="card shadow-lg hover-card">
+                <div class="card-header card-header-cruzroja">
+                    <h2 class="text-center mb-0">Panel de Administración</h2>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form method="POST">
                         {{ form.hidden_tag() }}
-                        <div class="form-group">
-                            {{ form.username.label }}
-                            {{ form.username(class="form-control") }}
+                        <div class="mb-4">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control hover-scale", placeholder="Ingrese su usuario") }}
                         </div>
-                        <div class="form-group">
-                            {{ form.password.label }}
-                            {{ form.password(class="form-control") }}
+                        <div class="mb-4">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control hover-scale", placeholder="Ingrese su contraseña") }}
                         </div>
-                        {{ form.submit(class="btn btn-primary btn-block mt-4") }}
+                        <div class="text-center">
+                            {{ form.submit(class="btn btn-danger btn-lg pulse-button w-100") }}
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+    
+    .hover-card {
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    }
+    
+    .card-header-cruzroja {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.5rem;
+    }
+    
+    .form-control:focus {
+        border-color: rgba(220,53,69,0.4);
+        box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.25);
+    }
+    
+    .pulse-button {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+</style>
 {% endblock %} 

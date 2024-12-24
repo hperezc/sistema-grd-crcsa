@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from weights import DIMENSION_WEIGHTS, COMPONENT_WEIGHTS, DIAGNOSTICS
 
 db = SQLAlchemy()
 
@@ -10,6 +11,8 @@ class Evaluacion(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     empresa = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=True)
+    sector = db.Column(db.String(50), nullable=True)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
     estado = db.Column(db.String(20), default='incompleto')
     ultima_dimension = db.Column(db.String(50))
@@ -64,6 +67,60 @@ class Evaluacion(db.Model):
         'integracion_transversalidad': False,
         'organizacion': False
     })
+
+    def valor_a_porcentaje(self, valor):
+        if valor is None:
+            return 0
+        try:
+            # Convertir el valor a entero
+            valor = int(valor)
+            # Convierte valor 0-4 a porcentaje
+            conversion = {0: 0, 1: 25, 2: 50, 3: 75, 4: 100}
+            return conversion.get(valor, 0)
+        except (ValueError, TypeError):
+            return 0
+
+    def calcular_puntaje_componente(self, dimension, componente):
+        valor = getattr(self, componente)
+        porcentaje = self.valor_a_porcentaje(valor)
+        peso = COMPONENT_WEIGHTS[dimension][componente]
+        return (porcentaje * peso) / 100
+
+    def calcular_puntaje_dimension(self, dimension):
+        """Calcula el puntaje de una dimensión específica"""
+        componentes = COMPONENT_WEIGHTS[dimension].keys()
+        # Suma de los puntajes ponderados de cada componente
+        suma_ponderada = sum(self.calcular_puntaje_componente(dimension, comp) for comp in componentes)
+        return suma_ponderada  # Ya está en porcentaje (0-100)
+
+    def obtener_diagnostico(self, dimension):
+        try:
+            # Calcular el puntaje de la dimensión
+            puntaje = self.calcular_puntaje_dimension(dimension)
+            
+            # Buscar el diagnóstico correspondiente
+            for rango, diagnostico in DIAGNOSTICS[dimension].items():
+                if rango[0] <= puntaje <= rango[1]:
+                    return diagnostico
+                    
+            # Si no encuentra un rango que coincida
+            print(f"No se encontró diagn��stico para dimensión {dimension} con puntaje {puntaje}")
+            return "No hay diagnóstico disponible"
+            
+        except Exception as e:
+            print(f"Error al obtener diagnóstico: {str(e)}")
+            return "Error al obtener diagnóstico"
+
+    def calcular_puntaje_total(self):
+        """Calcula el puntaje total ponderado de todas las dimensiones"""
+        puntaje_total = 0
+        for dimension, peso in DIMENSION_WEIGHTS.items():
+            # Obtener el puntaje de la dimensión (0-100)
+            puntaje_dimension = self.calcular_puntaje_dimension(dimension)
+            # Aplicar el peso de la dimensión
+            puntaje_ponderado = (puntaje_dimension * peso) / 100
+            puntaje_total += puntaje_ponderado
+        return puntaje_total
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

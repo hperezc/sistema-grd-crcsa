@@ -1,7 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, send_file
+from flask import Flask, render_template, redirect, url_for, flash, request, send_file, jsonify, make_response, current_app
 from flask_wtf import FlaskForm
-from wtforms import StringField, RadioField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms import StringField, RadioField, SubmitField, PasswordField, SelectField
+from wtforms.validators import DataRequired, Email
 from models import db, Evaluacion, Admin
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from dashboard import init_dashboard
@@ -9,6 +9,51 @@ from weasyprint import HTML
 from io import BytesIO
 from flask_migrate import Migrate
 import os
+from weights import DIMENSION_WEIGHTS, COMPONENT_WEIGHTS
+import traceback
+from forms import EvaluacionForm, ProcesosGestionForm
+from flask_mail import Mail, Message
+from dotenv import load_dotenv
+from uuid import uuid4
+import email.utils
+from time import localtime
+from plotly import graph_objects as go
+from plotly import express as px
+import numpy as np
+import pandas as pd
+import traceback
+import math
+from utils.charts import (
+    create_radar_chart,
+    create_gauge_chart,
+    create_stacked_chart,
+    create_heatmap_chart,
+    create_pareto_chart,
+    create_gap_chart
+)
+import pdfkit
+import base64
+import plotly.io as pio
+from concurrent.futures import ThreadPoolExecutor
+import time
+import threading
+
+load_dotenv()
+
+class IniciarEvaluacionForm(FlaskForm):
+    empresa = StringField('Nombre de la Empresa', validators=[DataRequired()])
+    email = StringField('Correo Electrónico', validators=[DataRequired(), Email()])
+    sector = SelectField('Sector', choices=[
+        ('', 'Seleccione un sector'),
+        ('industrial', 'Industrial'),
+        ('comercial', 'Comercial'),
+        ('servicios', 'Servicios'),
+        ('salud', 'Salud'),
+        ('educacion', 'Educación'),
+        ('tecnologia', 'Tecnología'),
+        ('otro', 'Otro')
+    ], validators=[DataRequired()])
+    submit = SubmitField('Comenzar Evaluación')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta'
@@ -23,7 +68,108 @@ migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'admin_login'
+login_manager.login_view = 'login'
+login_manager.login_message = 'Por favor inicie sesión para acceder a esta página.'
+
+# Configuración del correo
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('GMAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('GMAIL_APP_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = ('Cruz Roja Colombiana Seccional Antioquia', os.getenv('GMAIL_USERNAME'))
+
+mail = Mail(app)
+
+# Función para enviar correo con resultados
+def enviar_correo_resultados(evaluacion):
+    try:
+        # Generar el PDF usando la misma función que el botón de exportar
+        pdf_content = generar_pdf_evaluacion(evaluacion)
+        
+        # Obtener la URL base desde las variables de entorno o usar una por defecto
+        base_url = os.getenv('BASE_URL', 'http://localhost:5000')
+        resultados_url = f"{base_url}/resultados/{evaluacion.id}"
+        
+        # Mensaje para el usuario
+        msg_usuario = Message(
+            'Resultados de Evaluación de Madurez - GRD',
+            recipients=[evaluacion.email]
+        )
+        
+        msg_usuario.html = f"""
+            <p>¡Gracias por completar la evaluación!</p>
+            <p>Estimados {evaluacion.empresa},</p>
+            <p>Adjunto encontrará los resultados de su evaluación de gestión del riesgo empresarial.</p>
+            <p>Puntaje total obtenido: {evaluacion.calcular_puntaje_total():.2f}%</p>
+            <p>Sector: {evaluacion.sector}</p>
+            <br>
+            <p>Para ver los resultados detallados en línea, visite: <a href="{resultados_url}">Ver Resultados Detallados</a></p>
+            <br>
+            <p>Saludos cordiales,<br>Cruz Roja Colombiana Seccional Antioquia</p>
+        """
+        
+        # Adjuntar PDF al mensaje del usuario
+        msg_usuario.attach(
+            f"Evaluacion_Madurez_{evaluacion.empresa}.pdf",
+            'application/pdf',
+            pdf_content
+        )
+        
+        # Mensaje para la institución
+        msg_institucion = Message(
+            f'Nueva Evaluación Completada - {evaluacion.empresa}',
+            recipients=[os.getenv('INSTITUCION_EMAIL', 'correo_institucion@ejemplo.com')]
+        )
+        
+        msg_institucion.html = f"""
+            <h2>Nueva Evaluación Completada</h2>
+            <p><strong>Empresa:</strong> {evaluacion.empresa}</p>
+            <p><strong>Email:</strong> {evaluacion.email}</p>
+            <p><strong>Sector:</strong> {evaluacion.sector}</p>
+            <p><strong>Puntaje Total:</strong> {evaluacion.calcular_puntaje_total():.2f}%</p>
+            <p><strong>Fecha:</strong> {evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S')}</p>
+            
+            <h3>Puntajes por Dimensión:</h3>
+            <ul>
+                <li>Procesos de Gestión: {evaluacion.calcular_puntaje_dimension('procesos'):.2f}%</li>
+                <li>Regulaciones y Resiliencia: {evaluacion.calcular_puntaje_dimension('regulaciones'):.2f}%</li>
+                <li>Equipamiento y Materiales: {evaluacion.calcular_puntaje_dimension('equipamiento'):.2f}%</li>
+                <li>Integración y Transversalidad: {evaluacion.calcular_puntaje_dimension('integracion'):.2f}%</li>
+                <li>Organización: {evaluacion.calcular_puntaje_dimension('organizacion'):.2f}%</li>
+            </ul>
+            
+            <p>Para ver los resultados detallados en línea, visite: <a href="{resultados_url}">Ver Resultados Detallados</a></p>
+            <p>Se adjunta el PDF con los resultados completos.</p>
+        """
+        
+        # Adjuntar el mismo PDF al mensaje de la institución
+        msg_institucion.attach(
+            f"Evaluacion_Madurez_{evaluacion.empresa}.pdf",
+            'application/pdf',
+            pdf_content
+        )
+        
+        # Enviar ambos correos
+        mail.send(msg_usuario)
+        mail.send(msg_institucion)
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error enviando correo: {str(e)}")
+        traceback.print_exc()
+        return False
+
+def valor_a_porcentaje(valor):
+    if valor is None:
+        return 0
+    # Convierte valor 0-4 a porcentaje
+    conversion = {0: 0, 1: 25, 2: 50, 3: 75, 4: 100}
+    return conversion.get(int(valor), 0)
+
+app.jinja_env.filters['valor_a_porcentaje'] = valor_a_porcentaje
+app.jinja_env.globals['getattr'] = getattr
 
 class ProcesosGestionForm(FlaskForm):
     empresa = StringField('Nombre de la Empresa', validators=[DataRequired()])
@@ -205,7 +351,7 @@ class RegulacionesResilienciaForm(FlaskForm):
         'PT7. Memoria de emergencias y aprendizajes de eventos.',
         choices=[
             ('0', 'No se lleva a cabo un registro de los accidentes, eventos y/o contingencias presentados.'),
-            ('1', 'Los eventos son registrados con datos generales (fecha, ubicación y tipo de evento)'),
+            ('1', 'Los eventos son registrados con datos generales (fecha, ubicacion y tipo de evento)'),
             ('2', 'Los eventos son registrados con datos puntuales y detallados (Ubicación,  impactos especificos, personas involucrada, efectos economicos y operacionales)'),
             ('3', 'Si se presenta un evento de emergencia o contingencia, se realiza una investigacion del evento presentado con registros especificos e informes diseñados para tal fin. El resultado de estos informes se utiliza para la toma de decisiones.'),
             ('4', 'Los eventos se registran bajo una metodologia especifica, se emiten informes, recomendaciones, se actualizan los instrumentos, proyectos, obras o actividades en gestion del riesgo en consecuencia.')
@@ -338,7 +484,7 @@ class IntegracionTransversalidadForm(FlaskForm):
             ('0', 'No existen protocolos de comunicación en la organización para la gestión del riesgo, ni estos cuentan con un componentes de inclusividad y diversidad en su elaboración'),
             ('1', 'Solo se realiza momentos de comunicación y divulgación, con enfoque de seguridad y gestión del riesgo una vez suceden eventos de emergencia. No se toma en cuenta la diversidad e inclusión para divulgar estos momentos.'),
             ('2', 'Existen medios y canales definidos para la comunicación de emergencia-gestión del riesgo, interna y externa de la organización y estos son utilizados para transmitir mensajes de seguridad o gestión del riesgo. Se toma en cuenta algunas poblaciones con necesidades especiales.'),
-            ('3', 'Existen protocolos de comunicación de emergencia o gestión del riesgo a nivel interno y externo. Existe un área dedicada a su elaboración, redacci��n, emisión interna y externa con enfoque inclusivo. Gran parte de los receptores de esta comunicación son tenidos en cuenta para la elaboración de los contenidos y su difusión'),
+            ('3', 'Existen protocolos de comunicación de emergencia o gestión del riesgo a nivel interno y externo. Existe un área dedicada a su elaboración, redacción, emisión interna y externa con enfoque inclusivo. Gran parte de los receptores de esta comunicación son tenidos en cuenta para la elaboración de los contenidos y su difusión'),
             ('4', 'El área dedicada cuenta con protocolos de comunicaciones para eventos de emergencia en cada situación presentados, se encuentra formada en la terminología específica y se articula con las entidades además de comunidad. Se utilizan estrategias específicas inclusivas donde se toma en cuenta la diversidad de la población objetivo')
         ],
         validators=[DataRequired()]
@@ -371,7 +517,7 @@ class IntegracionTransversalidadForm(FlaskForm):
     it6_mecanismos_articulacion = RadioField(
         'IT6. Mecanismos de articulación interinstitucional',
         choices=[
-            ('0', 'No se realiza articulación con otras instituciones u organizaciones en materia de gestión del riesgo y emergencias'),
+            ('0', 'No se realiza articulación con otras instituciones u organizaciones en materia de gestion del riesgo y emergencias'),
             ('1', 'Se ha llevado a cabo acercamiento con instituciones y/o organizaciones pero no existe nada formal'),
             ('2', 'Existe al menos un mecanismo establecido para la articulación con instituciones y/o organismos de respuesta'),
             ('3', 'Existen más de un mecanismo de articulación con otras entidades y organizaciones. Formalmente definido que es utilizado periódicamente'),
@@ -491,48 +637,88 @@ def procesos_gestion(evaluacion_id):
 
 @app.route('/resultados/<int:evaluacion_id>')
 def resultados(evaluacion_id):
-    empresa_seleccionada = request.args.get('empresa')
-    
-    if empresa_seleccionada:
-        return redirect(url_for('resultados', evaluacion_id=empresa_seleccionada))
-    
-    evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
-    
-    empresas = Evaluacion.query.with_entities(
-        Evaluacion.id, 
-        Evaluacion.empresa
-    ).distinct().all()
-    
-    return render_template('resultados.html', 
-                         evaluacion=evaluacion, 
-                         empresas=empresas)
-
-@app.route('/exportar-pdf/<int:evaluacion_id>')
-def exportar_pdf(evaluacion_id):
-    evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
-    
     try:
-        # Renderizar el template HTML
-        html_content = render_template('resultados_pdf.html', evaluacion=evaluacion)
+        evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
         
-        # Generar PDF usando WeasyPrint
-        pdf = HTML(string=html_content).write_pdf()
+        # Si la evaluación está completa, cualquiera puede verla
+        if evaluacion.estado == 'completo':
+            return render_template('resultados.html',
+                                evaluacion=evaluacion,
+                                dimension_weights=DIMENSION_WEIGHTS,
+                                component_weights=COMPONENT_WEIGHTS)
         
-        # Crear stream de bytes
-        stream = BytesIO(pdf)
-        stream.seek(0)
+        # Si no está completa, solo usuarios autenticados
+        elif current_user.is_authenticated:
+            return render_template('resultados.html',
+                                evaluacion=evaluacion,
+                                dimension_weights=DIMENSION_WEIGHTS,
+                                component_weights=COMPONENT_WEIGHTS)
         
-        return send_file(
-            stream,
-            mimetype='application/pdf',
-            as_attachment=True,
-            download_name=f'evaluacion_{evaluacion_id}.pdf'
-        )
+        # Si no cumple ninguna condición anterior
+        else:
+            flash('No tiene permiso para ver estos resultados', 'danger')
+            return redirect(url_for('index'))
+            
+    except Exception as e:
+        flash(f'Error al cargar los resultados: {str(e)}', 'danger')
+        return redirect(url_for('index'))
+
+# Nueva ruta para enviar correo
+@app.route('/enviar_correo/<int:evaluacion_id>')
+def enviar_correo(evaluacion_id):
+    try:
+        evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
+        if enviar_correo_resultados(evaluacion):
+            return jsonify({'success': True, 'message': 'Correo enviado exitosamente'})
+        else:
+            return jsonify({'success': False, 'message': 'Error al enviar el correo'}), 500
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/exportar_pdf/<int:evaluacion_id>')
+def exportar_pdf(evaluacion_id):
+    try:
+        evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
+        pdf_content = generar_pdf_evaluacion(evaluacion)
+        
+        response = make_response(pdf_content)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=Evaluacion_Madurez_{evaluacion.empresa}.pdf'
+        return response
         
     except Exception as e:
-        app.logger.error(f"Error generando PDF: {str(e)}")
-        flash('Error al generar el PDF. Por favor, intente nuevamente.', 'error')
+        flash('Error al generar el PDF', 'error')
         return redirect(url_for('resultados', evaluacion_id=evaluacion_id))
+
+def generar_pdf_evaluacion(evaluacion):
+    try:
+        # Obtener la URL base desde las variables de entorno o usar una por defecto
+        base_url = os.getenv('BASE_URL', 'http://localhost:5000')
+        resultados_url = f"{base_url}/resultados/{evaluacion.id}"
+
+        # Leer y codificar la imagen en base64
+        logo_path = os.path.join(current_app.root_path, 'static', 'img', 'logo-cruz-roja.png')
+        with open(logo_path, 'rb') as img_file:
+            logo_base64 = base64.b64encode(img_file.read()).decode()
+
+        # Renderizar el template
+        html = render_template(
+            'resultados_pdf.html',
+            evaluacion=evaluacion,
+            dimension_weights=DIMENSION_WEIGHTS,
+            component_weights=COMPONENT_WEIGHTS,
+            resultados_url=resultados_url,
+            logo_base64=logo_base64  # Pasar la imagen codificada
+        )
+
+        # Generar PDF
+        pdf = HTML(string=html).write_pdf()
+        return pdf
+
+    except Exception as e:
+        print(f"Error generando PDF: {str(e)}")
+        traceback.print_exc()
+        return None
 
 @app.route('/regulaciones_resiliencia/<int:evaluacion_id>', methods=['GET', 'POST'])
 def regulaciones_resiliencia(evaluacion_id):
@@ -590,7 +776,10 @@ def equipamiento_materiales(evaluacion_id):
             db.session.rollback()
             flash('Error al guardar los datos: ' + str(e), 'danger')
     
-    return render_template('equipamiento_materiales.html', form=form, evaluacion=evaluacion, active_dimension='equipamiento')
+    return render_template('equipamiento_materiales.html', 
+                         form=form, 
+                         evaluacion=evaluacion,
+                         active_dimension='equipamiento')
 
 @app.route('/integracion_transversalidad/<int:evaluacion_id>', methods=['GET', 'POST'])
 def integracion_transversalidad(evaluacion_id):
@@ -628,25 +817,31 @@ def organizacion(evaluacion_id):
     
     if form.validate_on_submit():
         try:
+            # Actualizar datos del formulario
             form.populate_obj(evaluacion)
             evaluacion.ultima_dimension = 'organizacion'
+            evaluacion.estado = 'completo'  # Marcar como completo
             
-            # Verificar si la evaluación está completa
-            if verificar_evaluacion_completa(evaluacion):
-                evaluacion.estado = 'completo'
-                flash('Evaluación completada exitosamente', 'success')
-            
+            # Guardar en la base de datos
             db.session.commit()
             
-            if 'guardar_salir' in request.form:
-                return redirect(url_for('admin_dashboard'))
-            return redirect(url_for('resultados', evaluacion_id=evaluacion_id))
+            # Enviar correo
+            if enviar_correo_resultados(evaluacion):
+                flash('Evaluación completada y enviada por correo exitosamente', 'success')
+            else:
+                flash('Evaluación completada pero hubo un error al enviar el correo', 'warning')
+            
+            # Redirigir a resultados
+            return redirect(url_for('resultados', evaluacion_id=evaluacion.id))
             
         except Exception as e:
             db.session.rollback()
-            flash('Error al guardar los datos: ' + str(e), 'danger')
+            flash(f'Error al guardar los datos: {str(e)}', 'danger')
     
-    return render_template('organizacion.html', form=form, evaluacion=evaluacion, active_dimension='organizacion')
+    return render_template('organizacion.html', 
+                         form=form, 
+                         evaluacion=evaluacion, 
+                         active_dimension='organizacion')
 
 @app.route('/resultados')
 def resultados_lista():
@@ -684,29 +879,24 @@ def delete_evaluacion(id):
     flash('Evaluación eliminada exitosamente', 'success')
     return redirect(url_for('admin_dashboard'))
 
-@app.route('/iniciar-evaluacion', methods=['GET', 'POST'])
+@app.route('/iniciar_evaluacion', methods=['GET', 'POST'])
 def iniciar_evaluacion():
     form = IniciarEvaluacionForm()
     if form.validate_on_submit():
+        evaluacion = Evaluacion(
+            empresa=form.empresa.data,
+            email=form.email.data,
+            sector=form.sector.data
+        )
         try:
-            evaluacion = Evaluacion(
-                empresa=form.empresa.data,
-                estado='parcial',
-                ultima_dimension='inicio'
-            )
             db.session.add(evaluacion)
             db.session.commit()
-            flash('Evaluación iniciada correctamente', 'success')
             return redirect(url_for('procesos_gestion', evaluacion_id=evaluacion.id))
         except Exception as e:
             db.session.rollback()
-            flash('Error al crear la evaluación: ' + str(e), 'danger')
-            return redirect(url_for('iniciar_evaluacion'))
+            flash('Error al crear la evaluación. Por favor intente nuevamente.', 'error')
+            print(str(e))
     return render_template('iniciar_evaluacion.html', form=form)
-
-class IniciarEvaluacionForm(FlaskForm):
-    empresa = StringField('Nombre de la Empresa', validators=[DataRequired()])
-    submit = SubmitField('Comenzar Evaluación')
 
 @app.route('/continuar_evaluacion/<int:evaluacion_id>')
 def continuar_evaluacion(evaluacion_id):
@@ -808,6 +998,32 @@ def verificar_evaluacion_completa(evaluacion, seccion=None):
             for campos in campos_por_seccion.values() 
             for campo in campos
         )
+
+@app.route('/admin/logout')
+@login_required
+def admin_logout():
+    logout_user()
+    flash('Has cerrado sesión exitosamente.', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/get_graphs_data/<int:evaluacion_id>')
+def get_graphs_data(evaluacion_id):
+    try:
+        evaluacion = Evaluacion.query.get_or_404(evaluacion_id)
+        
+        # Usar las funciones importadas
+        graphs = {
+            'radar': create_radar_chart(evaluacion).to_json(),
+            'gauge': create_gauge_chart(evaluacion).to_json(),
+            'stacked': create_stacked_chart(evaluacion).to_json(),
+            'heatmap': create_heatmap_chart(evaluacion).to_json(),
+            'pareto': create_pareto_chart(evaluacion).to_json(),
+            'gap': create_gap_chart(evaluacion).to_json()
+        }
+        
+        return jsonify(graphs)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     with app.app_context():

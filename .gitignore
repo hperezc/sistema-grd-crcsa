@@ -58,3 +58,10 @@ htmlcov/
 *.bak
 *.swp
 *~
+
+# Archivos temporales de Excel
+~$*
+*.tmp
+*.bak
+*.swp
+*~

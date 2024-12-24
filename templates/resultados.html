@@ -1,232 +1,655 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container mt-5">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        {% if evaluacion %}
-            <div class="card shadow">
-                <div class="card-header card-header-cruzroja">
-                    <h2 class="text-center mb-0">Resultados de la Evaluación</h2>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6 offset-md-3">
-                            <form method="GET" class="d-flex gap-2">
-                                <select name="empresa" class="form-select">
-                                    <option value="">Seleccione una empresa</option>
-                                    {% for emp in empresas %}
-                                        <option value="{{ emp.id }}" {% if emp.id == evaluacion.id %}selected{% endif %}>
-                                            {{ emp.empresa }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-primary">Filtrar</button>
-                            </form>
-                        </div>
-                    </div>
-                    <h3>Empresa: {{ evaluacion.empresa }}</h3>
-                    <p class="text-muted">Fecha: {{ evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-                    <p>Estado: 
-                        {% if evaluacion.estado == 'completo' %}
-                            <span class="badge bg-success">Completo</span>
-                        {% elif evaluacion.estado == 'parcial' %}
-                            <span class="badge bg-warning">Parcial</span>
-                        {% else %}
-                            <span class="badge bg-warning text-dark">Incompleto</span>
-                        {% endif %}
-                    </p>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Procesos de Gestión del Riesgo</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="resultado-item">
-                                <span>P1. Identificación amenazas</span>
-                                <span class="resultado-valor">{{ evaluacion.p1_identificacion_amenazas if evaluacion.p1_identificacion_amenazas is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P2. Identificación vulnerabilidades</span>
-                                <span class="resultado-valor">{{ evaluacion.p2_identificacion_vulnerabilidades if evaluacion.p2_identificacion_vulnerabilidades is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P3. Análisis de riesgos</span>
-                                <span class="resultado-valor">{{ evaluacion.p3_analisis_riesgos if evaluacion.p3_analisis_riesgos is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P4. Valoración de riesgos</span>
-                                <span class="resultado-valor">{{ evaluacion.p4_valoracion_riesgos if evaluacion.p4_valoracion_riesgos is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P5. Reducción de riesgos</span>
-                                <span class="resultado-valor">{{ evaluacion.p5_reduccion_riesgos if evaluacion.p5_reduccion_riesgos is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P6. Monitoreo y revisión</span>
-                                <span class="resultado-valor">{{ evaluacion.p6_monitoreo_revision if evaluacion.p6_monitoreo_revision is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P7. Seguimiento a estrategias</span>
-                                <span class="resultado-valor">{{ evaluacion.p7_seguimiento_estrategias if evaluacion.p7_seguimiento_estrategias is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>P8. Comunicación y consulta</span>
-                                <span class="resultado-valor">{{ evaluacion.p8_comunicacion if evaluacion.p8_comunicacion is not none else '0' }}/4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Regulaciones, Resiliencia y Protección Financiera</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="resultado-item">
-                                <span>PT1. Adopción de certificaciones</span>
-                                <span class="resultado-valor">{{ evaluacion.pt1_adopcion_certificaciones if evaluacion.pt1_adopcion_certificaciones is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT2. Regulaciones nacionales</span>
-                                <span class="resultado-valor">{{ evaluacion.pt2_regulaciones_nacionales if evaluacion.pt2_regulaciones_nacionales is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT3. Plan de Gestión del Riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.pt3_plan_gestion_riesgo if evaluacion.pt3_plan_gestion_riesgo is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT4. Política de Gestión del Riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.pt4_politica_gestion_riesgo if evaluacion.pt4_politica_gestion_riesgo is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT5. Política de seguridad operacional</span>
-                                <span class="resultado-valor">{{ evaluacion.pt5_politica_seguridad if evaluacion.pt5_politica_seguridad is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT6. Sistema SARLAFT</span>
-                                <span class="resultado-valor">{{ evaluacion.pt6_sistema_sarlaft if evaluacion.pt6_sistema_sarlaft is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT7. Memoria de emergencias</span>
-                                <span class="resultado-valor">{{ evaluacion.pt7_memoria_emergencias if evaluacion.pt7_memoria_emergencias is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT8. Planes de emergencia</span>
-                                <span class="resultado-valor">{{ evaluacion.pt8_planes_emergencia if evaluacion.pt8_planes_emergencia is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>PT9. Seguros y pólizas</span>
-                                <span class="resultado-valor">{{ evaluacion.pt9_seguros_polizas if evaluacion.pt9_seguros_polizas is not none else '0' }}/4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Equipamiento, Materiales, Insumos y Capacidades Técnicas</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="resultado-item">
-                                <span>EQ1. Control de acceso</span>
-                                <span class="resultado-valor">{{ evaluacion.eq1_control_acceso if evaluacion.eq1_control_acceso is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>EQ2. Controles de seguridad física</span>
-                                <span class="resultado-valor">{{ evaluacion.eq2_controles_seguridad if evaluacion.eq2_controles_seguridad is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>EQ3. Controles de ciberseguridad</span>
-                                <span class="resultado-valor">{{ evaluacion.eq3_controles_ciberseguridad if evaluacion.eq3_controles_ciberseguridad is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>EQ4. Redes/Sistemas de detección</span>
-                                <span class="resultado-valor">{{ evaluacion.eq4_redes_deteccion if evaluacion.eq4_redes_deteccion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>EQ5. Brigadas para respuesta</span>
-                                <span class="resultado-valor">{{ evaluacion.eq5_brigadas_respuesta if evaluacion.eq5_brigadas_respuesta is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>EQ6. Formación y capacitación</span>
-                                <span class="resultado-valor">{{ evaluacion.eq6_formacion_capacitacion if evaluacion.eq6_formacion_capacitacion is not none else '0' }}/4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Integración y Transversalidad</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="resultado-item">
-                                <span>IT1. Transversalización de la gestión del riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.it1_transversalizacion if evaluacion.it1_transversalizacion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>IT2. Protocolos de comunicación</span>
-                                <span class="resultado-valor">{{ evaluacion.it2_protocolos_comunicacion if evaluacion.it2_protocolos_comunicacion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>IT3. Planes de ayuda mutua</span>
-                                <span class="resultado-valor">{{ evaluacion.it3_planes_ayuda if evaluacion.it3_planes_ayuda is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>IT5. Retroalimentación</span>
-                                <span class="resultado-valor">{{ evaluacion.it5_retroalimentacion if evaluacion.it5_retroalimentacion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>IT6. Mecanismos de articulación</span>
-                                <span class="resultado-valor">{{ evaluacion.it6_mecanismos_articulacion if evaluacion.it6_mecanismos_articulacion is not none else '0' }}/4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Organización</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="resultado-item">
-                                <span>OR1. Área de gestión del riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.or1_area_gestion if evaluacion.or1_area_gestion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>OR2. Presupuesto para gestión del riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.or2_presupuesto if evaluacion.or2_presupuesto is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>OR3. Personal con dedicación 100%</span>
-                                <span class="resultado-valor">{{ evaluacion.or3_personal_dedicacion if evaluacion.or3_personal_dedicacion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>OR4. Proyectos en gestión del riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.or4_proyectos_gestion if evaluacion.or4_proyectos_gestion is not none else '0' }}/4</span>
-                            </div>
-                            <div class="resultado-item">
-                                <span>OR5. Inclusión en la Gestión de Riesgo</span>
-                                <span class="resultado-valor">{{ evaluacion.or5_inclusion_gestion if evaluacion.or5_inclusion_gestion is not none else '0' }}/4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center mt-4 action-buttons">
-                        <button onclick="exportToPDF()" class="btn btn-export-pdf btn-lg me-2">
-                            <i class="fas fa-file-pdf"></i> Exportar a PDF
-                        </button>
-                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">Nueva Evaluación</a>
-                    </div>
-                </div>
+<div class="container mt-4" data-aos="fade-up">
+    <!-- Encabezado -->
+    <div class="text-center mb-5" data-aos="fade-down">
+        <img src="{{ url_for('static', filename='img/logo-cruz-roja.png') }}" 
+             alt="Logo Cruz Roja" 
+             class="hover-scale"
+             style="max-width: 150px;">
+        <h1 class="text-danger mt-4">Resultados de Evaluación de Madurez</h1>
+        <h2 class="text-secondary">Gestión del Riesgo de Desastres</h2>
+        
+        <div class="card mt-4 mx-auto hover-card shadow-sm" style="max-width: 400px;">
+            <div class="card-body">
+                <p class="mb-2"><strong>Empresa:</strong> {{ evaluacion.empresa }}</p>
+                <p class="mb-0"><strong>Fecha:</strong> {{ evaluacion.fecha.strftime('%d/%m/%Y') }}</p>
             </div>
-        {% else %}
-            <div class="alert alert-info">
-                No hay evaluaciones disponibles.
-            </div>
-        {% endif %}
+        </div>
     </div>
+
+    <!-- Resultados por Dimensión -->
+    <div class="mb-5">
+        <h3 class="text-danger border-bottom border-danger pb-2 mb-4" data-aos="fade-right">
+            Resultados por Dimensión
+        </h3>
+        
+        {% for dimension, componentes in component_weights.items() %}
+        <div class="card mb-4 shadow-lg hover-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+            <div class="card-header bg-white">
+                <h4 class="text-danger mb-0 d-flex justify-content-between align-items-center">
+                    <span>
+                        {% if dimension == 'procesos' %}
+                            Procesos de Gestión del Riesgo
+                        {% elif dimension == 'regulaciones' %}
+                            Regulaciones, Resiliencia y Protección Financiera
+                        {% elif dimension == 'equipamiento' %}
+                            Equipamiento, Materiales, Insumos y Capacidades Técnicas
+                        {% elif dimension == 'integracion' %}
+                            Integración y Transversalidad
+                        {% elif dimension == 'organizacion' %}
+                            Organización
+                        {% endif %}
+                    </span>
+                    <span class="badge bg-danger">
+                        {{ '%.2f'|format(evaluacion.calcular_puntaje_dimension(dimension)) }}%
+                    </span>
+                </h4>
+            </div>
+            
+            <div class="card-body">
+                <!-- Componentes -->
+                {% for comp, peso in componentes.items() %}
+                <div class="row align-items-center py-3 border-bottom hover-bg-light">
+                    <div class="col">
+                        <span class="component-name">
+                            {{ comp|replace('p1_', 'P1. ')|replace('pt1_', 'PT1. ')|replace('eq1_', 'EQ1. ')|replace('it1_', 'IT1. ')|replace('or1_', 'OR1. ')|replace('_', ' ')|title }}
+                            <span class="text-secondary">({{ peso }}%)</span>
+                        </span>
+                    </div>
+                    <div class="col-auto">
+                        {% set valor = getattr(evaluacion, comp) %}
+                        <span class="badge bg-danger">{{ valor if valor is not none else '0' }}/4</span>
+                        <span class="text-secondary ms-2">({{ valor|valor_a_porcentaje }}%)</span>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Resumen de la dimensión -->
+                <div class="mt-4 dimension-summary">
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div class="progress-bar bg-danger" 
+                             role="progressbar" 
+                             style="width: '{{ evaluacion.calcular_puntaje_dimension(dimension) }}%"
+                             aria-valuenow="{{ evaluacion.calcular_puntaje_dimension(dimension) }}"
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                    
+                    <div class="diagnostico-card">
+                        <h5 class="text-danger">Diagnóstico</h5>
+                        <p class="mb-0">{{ evaluacion.obtener_diagnostico(dimension) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Puntaje Total -->
+        <div class="bg-danger text-white p-4 rounded shadow-lg total-score" data-aos="fade-up">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Puntaje Total de Madurez</h4>
+                <span class="h4 mb-0 badge bg-white text-danger">
+                    {{ "%.2f"|format(evaluacion.calcular_puntaje_total()) }}%
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Después del Puntaje Total -->
+    <div class="row mt-5" data-aos="fade-up">
+        <h3 class="text-danger border-bottom border-danger pb-2 mb-4">Gráficos de Análisis</h3>
+        
+        <!-- Gráficos principales -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Análisis Radar por Dimensiones</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Visualización radial que muestra el nivel de madurez alcanzado en cada dimensión. 
+                                Permite identificar rápidamente las áreas más fuertes y débiles de la organización.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="radar-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Nivel de Madurez General</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Medidor que indica el nivel general de madurez de la organización. 
+                                El color indica el estado: rojo (crítico), amarillo (en desarrollo), verde (óptimo).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="gauge-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Componentes por Dimensión</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Gráfico de barras que muestra la contribución de cada componente dentro de su dimensión. 
+                                Permite comparar la distribución de componentes entre diferentes dimensiones.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="stacked-bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Mapa de Calor de Componentes</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Visualización que muestra la intensidad de los valores de cada componente mediante colores. 
+                                Rojo indica valores bajos, amarillo valores medios y verde valores altos.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="heatmap-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Análisis de Pareto</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Gráfico que combina barras y línea acumulativa para identificar los componentes 
+                                más significativos y su contribución al total del sistema.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="pareto-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Análisis de Brechas</h5>
+                        <div class="tooltip-container">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="custom-tooltip">
+                                Visualización que muestra la diferencia entre el estado actual y el objetivo (100%) 
+                                para cada componente, identificando las mayores oportunidades de mejora.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="gap-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones en el centro -->
+        <div class="text-center">
+            <a href="{{ url_for('exportar_pdf', evaluacion_id=evaluacion.id) }}" 
+               class="btn btn-danger btn-lg me-3 hover-scale">
+                <i class="fas fa-file-pdf me-2"></i> Exportar a PDF
+            </a>
+            <button onclick="enviarCorreo({{ evaluacion.id }})" 
+                    class="btn btn-success btn-lg me-3 hover-scale">
+                <i class="fas fa-envelope me-2"></i> Enviar por Correo
+            </button>
+            
+            {% if current_user.is_authenticated %}
+            <!-- Opciones solo para administradores -->
+            <a href="{{ url_for('admin_dashboard') }}" 
+               class="btn btn-outline-secondary btn-lg hover-scale">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Dashboard
+            </a>
+            {% else %}
+            <a href="{{ url_for('index') }}" 
+               class="btn btn-outline-secondary btn-lg hover-scale">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Inicio
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .hover-scale {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .hover-scale:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.15);
+    }
+    
+    .btn-lg {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        border-radius: 30px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .btn-lg:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    /* Estilos específicos para el botón de enviar correo */
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+    
+    /* Efecto disabled para el botón mientras se envía */
+    .btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+    
+    .hover-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: linear-gradient(to bottom, #fff, #fcfcfc);
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+    }
+    
+    .component-name {
+        font-size: 1.1rem;
+        color: #495057;
+        transition: all 0.3s ease;
+        padding: 8px 0;
+    }
+    
+    .diagnostico-card {
+        background: linear-gradient(to right, rgba(220,53,69,0.08), rgba(220,53,69,0.02));
+        border-left: 4px solid #dc3545;
+        padding: 1.8rem;
+        border-radius: 0 12px 12px 0;
+        margin-top: 1.2rem;
+        box-shadow: 0 3px 10px rgba(220,53,69,0.05);
+    }
+    
+    .progress {
+        border-radius: 10px;
+        background-color: rgba(220,53,69,0.1);
+    }
+    
+    .progress-bar {
+        transition: width 1s ease-in-out;
+    }
+    
+    .total-score {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        box-shadow: 0 8px 25px rgba(220,53,69,0.25);
+        transition: all 0.3s ease;
+    }
+    
+    .total-score:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(220,53,69,0.3);
+    }
+    
+    .pulse-button {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .hover-bg-light {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 8px;
+        margin: 4px 0;
+        padding: 12px 8px !important;
+    }
+    
+    .hover-bg-light:hover {
+        background-color: rgba(220,53,69,0.08);
+        transform: translateX(8px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    
+    .badge.bg-danger {
+        font-size: 1rem;
+        padding: 8px 16px;
+        border-radius: 25px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .badge.bg-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* Colores según el porcentaje alcanzado - nuevos rangos */
+    .badge-success {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+    
+    .badge-warning {
+        background-color: #ffc107 !important;
+        color: #000 !important;
+    }
+    
+    .badge-danger {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+    
+    /* Estilos para tooltips */
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .tooltip-icon {
+        color: #6c757d;
+        font-size: 1rem;
+        cursor: help;
+        transition: color 0.3s ease;
+    }
+    
+    .tooltip-icon:hover {
+        color: #dc3545;
+    }
+    
+    .custom-tooltip {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(4px);
+        background-color: rgba(0, 0, 0, 0.85);
+        border-radius: 8px;
+        padding: 12px 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .tooltip-container:hover .custom-tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .custom-tooltip::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        right: 8px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+    }
+    
+    /* Mejoras en las tarjetas de gráficos */
+    .card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        background: #ffffff;
+        box-shadow: 
+            0 4px 6px rgba(0, 0, 0, 0.05),
+            0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 
+            0 8px 12px rgba(0, 0, 0, 0.05),
+            0 15px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        background: #ffffff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+    }
+    
+    /* Mejora del tooltip */
+    .tooltip-container {
+        position: relative;
+    }
+    
+    .tooltip-icon {
+        color: #95a5a6;
+        font-size: 0.9rem;
+        padding: 4px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+    
+    .tooltip-icon:hover {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+    
+    .custom-tooltip {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 250px;
+        padding: 12px 16px;
+        background: rgba(33, 37, 41, 0.95);
+        color: white;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(8px);
+        box-shadow: 
+            0 4px 6px rgba(0, 0, 0, 0.1),
+            0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tooltip-container:hover .custom-tooltip {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(5px);
+    }
+    
+    /* Contenedor de gráficos */
+    [id$="-chart"] {
+        min-height: 300px;
+        padding: 1rem;
+        border-radius: 12px;
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    /* Mejora en la disposición de los gráficos */
+    .row > [class*='col-'] {
+        padding: 1rem;
+    }
+    
+    /* Animación suave al cargar los gráficos */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Scripts -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const evaluacionId = {{ evaluacion.id }};
+    const config = {
+        responsive: true,
+        displayModeBar: false
+    };
+
+    fetch(`/get_graphs_data/${evaluacionId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Crear cada gráfico usando Plotly
+            if (data.radar) {
+                Plotly.newPlot('radar-chart', JSON.parse(data.radar), config);
+            }
+            if (data.gauge) {
+                Plotly.newPlot('gauge-chart', JSON.parse(data.gauge), config);
+            }
+            if (data.stacked) {
+                Plotly.newPlot('stacked-bar-chart', JSON.parse(data.stacked), config);
+            }
+            if (data.heatmap) {
+                Plotly.newPlot('heatmap-chart', JSON.parse(data.heatmap), config);
+            }
+            if (data.pareto) {
+                Plotly.newPlot('pareto-chart', JSON.parse(data.pareto), config);
+            }
+            if (data.gap) {
+                Plotly.newPlot('gap-chart', JSON.parse(data.gap), config);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.querySelectorAll('[id$="-chart"]').forEach(el => {
+                el.innerHTML = `<div class="alert alert-danger">Error al cargar el gráfico: ${error.message}</div>`;
+            });
+        });
+
+    // Función para exportar a PDF
+    function exportarPDF(evaluacionId) {
+        const button = document.querySelector('[onclick*="exportarPDF"]');
+        if (!button) return;
+
+        // Mostrar loading
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generando PDF...';
+
+        // Hacer la petición
+        window.location.href = `/exportar_pdf/${evaluacionId}`;
+
+        // Restaurar el botón después de un tiempo razonable
+        setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-file-pdf me-2"></i> Exportar a PDF';
+        }, 2000);
+    }
+
+    // Asignar la función al botón
+    document.querySelector('[onclick*="exportarPDF"]').onclick = () => exportarPDF({{ evaluacion.id }});
+
+    // Colorear badges según el nuevo rango de porcentajes
+    document.querySelectorAll('.badge.bg-danger').forEach(badge => {
+        const porcentaje = parseFloat(badge.textContent);
+        if (porcentaje >= 80) {
+            badge.classList.remove('bg-danger');
+            badge.classList.add('badge-success');
+        } else if (porcentaje >= 40) {
+            badge.classList.remove('bg-danger');
+            badge.classList.add('badge-warning');
+        }
+        // Si es menor a 40%, se mantiene el rojo (badge-danger)
+    });
+});
+
+function enviarCorreo(evaluacionId) {
+    const button = event.target.closest('.btn'); // Aseguramos que obtenemos el botón incluso si se hace clic en el ícono
+    const originalText = button.innerHTML;
+    
+    // Mostrar spinner
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...';
+    
+    // Hacer la petición
+    fetch(`/enviar_correo/${evaluacionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar notificación de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Correo enviado!',
+                    text: 'Los resultados han sido enviados exitosamente.',
+                    confirmButtonColor: '#28a745'
+                });
+            } else {
+                throw new Error(data.message || 'Error al enviar el correo');
+            }
+        })
+        .catch(error => {
+            // Mostrar notificación de error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al enviar el correo: ' + error.message,
+                confirmButtonColor: '#dc3545'
+            });
+        })
+        .finally(() => {
+            // Restaurar botón
+            button.disabled = false;
+            button.innerHTML = originalText;
+        });
+}
+</script>
 {% endblock %} 

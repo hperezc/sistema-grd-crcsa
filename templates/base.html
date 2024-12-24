@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% if title %}{{ title }} - {% endif %}Sistema de Evaluación de Gestión del Riesgo</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -13,6 +13,28 @@
     
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+    <!-- Añadir estas reglas CSS inline para asegurar que se apliquen -->
+    <style>
+        @media screen and (max-width: 1024px) {
+            h1 {
+                font-size: 1.3rem !important;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            h1 {
+                font-size: 1rem !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -25,30 +47,35 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('resultados_lista') }}">
-                            <i class="fas fa-list-alt"></i> Resultados
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard_analitico') }}">
-                            <i class="fas fa-chart-bar"></i> Dashboard Analítico
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        {% if current_user.is_authenticated %}
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                                <i class="fas fa-cog"></i> Panel de Administración
+                                <i class="fas fa-cogs"></i> Panel
                             </a>
-                        {% else %}
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('resultados_lista') }}">
+                                <i class="fas fa-list-alt"></i> Resultados
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard/">
+                                <i class="fas fa-chart-line"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin_login') }}">
                                 <i class="fas fa-user-shield"></i> Administrador
                             </a>
-                        {% endif %}
-                    </li>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -58,8 +85,8 @@
     <div class="header-container">
         <div class="logo-container">
             <img src="{{ url_for('static', filename='img/logo-cruz-roja.png') }}" alt="Logo Cruz Roja Colombiana">
-            <h1>{{ title if title else 'Sistema de Evaluación de Gestión del Riesgo' }}</h1>
         </div>
+        <h1>Sistema de Evaluación de Gestión del Riesgo</h1>
     </div>
 
     <!-- Flash Messages -->
@@ -84,5 +111,14 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/resultados.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+        });
+    </script>
 </body>
 </html> 

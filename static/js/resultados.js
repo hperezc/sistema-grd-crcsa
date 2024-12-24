@@ -1,9 +1,21 @@
-function exportToPDF() {
-    const evaluacionId = window.location.pathname.split('/').pop();
-    if (!evaluacionId) {
-        alert('No se pudo determinar la evaluación actual');
-        return;
-    }
+function exportarPDF(evaluacionId) {
+    // Mostrar spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner-border text-danger';
+    spinner.setAttribute('role', 'status');
     
-    window.location.href = `/exportar-pdf/${evaluacionId}`;
+    const button = document.querySelector('#exportar-btn');
+    button.disabled = true;
+    button.innerHTML = '';
+    button.appendChild(spinner);
+    button.appendChild(document.createTextNode(' Generando PDF...'));
+
+    // Iniciar descarga
+    window.location.href = `/exportar_pdf/${evaluacionId}`;
+
+    // Restaurar botón después de un tiempo razonable
+    setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = 'Exportar PDF';
+    }, 5000);
 } 

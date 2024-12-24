@@ -1,23 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5" data-aos="fade-up">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card shadow">
+            <div class="card shadow-lg hover-card">
                 <div class="card-header card-header-cruzroja">
                     <h2 class="text-center mb-0">Sistema de Evaluación de Gestión del Riesgo</h2>
                 </div>
                 <div class="card-body">
-                    <p class="lead text-center mb-4">
-                        Seleccione la dimensión que desea evaluar:
-                    </p>
-                    
+                    <!-- Mensaje introductorio -->
+                    <div class="intro-message mb-5">
+                        <p class="lead">
+                            Bienvenido a la herramienta de evaluación de la Cruz Roja Colombiana Seccional Antioquia, para la gestión del riesgo a nivel organizacional.
+                        </p>
+                        <p>
+                            Esta herramienta permite el diagnóstico actual en cinco dimensiones que abarcan los procesos, regulaciones, equipamientos, transversalidad y organización para gestión del riesgo.
+                        </p>
+                        <p>
+                            Para realizar el uso de la herramienta, se abordan las cinco dimensiones con su respectivos componentes mediante la selección del nivel avance en cada uno de estos, con un pequeño mensaje de ejemplo. La herramienta cuenta con la capacidad de guardar el avance por cada dimensión completa; se recomienda destinar un tiempo estimado de 20 minutos para su diligenciamiento, sin embargo la puedes llenar parcialmente y continuar en otra oportunidad.
+                        </p>
+                        <p>
+                            Al final si proporcionas tu correo electrónico recibirás el resultado en formato PDF con el diagnóstico y los resultados de la gestión del riesgo en tu organización.
+                        </p>
+
+                        <!-- Tabla informativa -->
+                        <div class="table-responsive mt-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">Dimensiones</td>
+                                        <td>Grandes agrupamientos de componentes relacionados con una misma línea en gestión del riesgo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Componentes</td>
+                                        <td>Parte específica a evaluar de la gestión del riesgo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Descriptores</td>
+                                        <td>Mensajes de ejemplificación del nivel de avance por componente.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Botón para comenzar -->
                     <div class="row g-4">
-                        <div class="col-md-6 mx-auto">
-                            <a href="{{ url_for('iniciar_evaluacion') }}" class="btn btn-primary btn-lg w-100 p-4 shadow-sm h-100">
-                                <i class="fas fa-tasks mb-2"></i>
-                                <br>Comenzar Nueva Evaluación
+                        <div class="col-md-4 mx-auto">
+                            <a href="{{ url_for('iniciar_evaluacion') }}" 
+                               class="btn btn-primary btn-lg w-100 p-3 shadow-sm d-flex align-items-center justify-content-center pulse-button">
+                                <i class="fas fa-tasks me-2"></i>
+                                <span>Comenzar Nueva Evaluación</span>
                             </a>
                         </div>
                     </div>
@@ -26,4 +66,71 @@
         </div>
     </div>
 </div>
+
+<style>
+    .intro-message p {
+        text-align: justify;
+        margin-bottom: 1rem;
+        color: #4a4a4a;
+    }
+    
+    .table {
+        background-color: #fff;
+    }
+    
+    .thead-light th {
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+    
+    .card-header-cruzroja {
+        background-color: #dc3545;
+        color: white;
+        padding: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+    }
+    
+    .btn-primary i {
+        font-size: 1.2rem;
+    }
+    
+    .btn-primary:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+        
+        .card {
+            margin: 10px;
+        }
+        
+        .intro-message p {
+            font-size: 0.95rem;
+        }
+        
+        .table {
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            font-size: 1rem;
+            padding: 0.75rem !important;
+        }
+        
+        .btn-primary i {
+            font-size: 1.1rem;
+        }
+    }
+</style>
 {% endblock %} 

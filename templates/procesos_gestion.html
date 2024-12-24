@@ -2,7 +2,9 @@
 {% from "components/progress_nav.html" import progress_nav %}
 
 {% block content %}
-    <div class="dimension-nav">
+<div class="container mt-5" data-aos="fade-up">
+    <!-- Barra de navegación de dimensiones -->
+    <div class="dimension-nav" data-aos="fade-down">
         <a href="{{ url_for('procesos_gestion', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'procesos' %}active{% endif %}">
             <i class="fas fa-tasks"></i>
             <span><span class="dimension-number">1.</span> Procesos</span>
@@ -15,8 +17,8 @@
             <i class="fas fa-tools"></i>
             <span><span class="dimension-number">3.</span> Equipamiento</span>
         </a>
-        <a href="{{ url_for('integracion_transversalidad', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'integracion' %}active{% endif %}">
-            <i class="fas fa-network-wired"></i>
+        <a href="{{ url_for('integracion_transversalidad', evaluacion_id=evaluacion.id) }}" class="dimension-link hover-scale {% if active_dimension == 'integracion' %}active{% endif %}">
+            <i class="fas fa-project-diagram"></i>
             <span><span class="dimension-number">4.</span> Integración</span>
         </a>
         <a href="{{ url_for('organizacion', evaluacion_id=evaluacion.id) }}" class="dimension-link {% if active_dimension == 'organizacion' %}active{% endif %}">
@@ -24,71 +26,62 @@
             <span><span class="dimension-number">5.</span> Organización</span>
         </a>
     </div>
-    
-    <div class="container mt-5 mb-5">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
-        <div class="card shadow">
-            <div class="card-header card-header-cruzroja">
-                <h2 class="text-center mb-0">Procesos de Gestión del Riesgo</h2>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {{ form.csrf_token }}
+    <div class="card shadow-lg hover-card">
+        <div class="card-header card-header-cruzroja">
+            <h2 class="text-center mb-0">Procesos de Gestión del Riesgo</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                
+                <div class="mb-4">
+                    {{ form.empresa.label(class="form-label") }}
+                    {{ form.empresa(class="form-control") }}
+                </div>
+
+                <div class="nivel-header">
+                    <div class="row">
+                        <div class="col"><strong>Inexistente (0)</strong></div>
+                        <div class="col"><strong>Incipiente (1)</strong></div>
+                        <div class="col"><strong>Parcial (2)</strong></div>
+                        <div class="col"><strong>Avanzado (3)</strong></div>
+                        <div class="col"><strong>Integrado y transversal (4)</strong></div>
+                    </div>
+                </div>
+
+                <div class="component-section">
+                    <h3>Procesos de Gestión del Riesgo</h3>
                     
-                    <div class="mb-4">
-                        {{ form.empresa.label(class="form-label") }}
-                        {{ form.empresa(class="form-control") }}
-                    </div>
-
-                    <div class="nivel-header">
-                        <div class="row">
-                            <div class="col"><strong>Inexistente (0)</strong></div>
-                            <div class="col"><strong>Incipiente (1)</strong></div>
-                            <div class="col"><strong>Parcial (2)</strong></div>
-                            <div class="col"><strong>Avanzado (3)</strong></div>
-                            <div class="col"><strong>Integrado y transversal (4)</strong></div>
-                        </div>
-                    </div>
-
-                    <div class="component-section">
-                        <h3>Procesos de Gestión del Riesgo</h3>
-                        
-                        {% for field in [form.p1_identificacion_amenazas, form.p2_identificacion_vulnerabilidades, 
-                                       form.p3_analisis_riesgos, form.p4_valoracion_riesgos, 
-                                       form.p5_reduccion_riesgos, form.p6_monitoreo_revision,
-                                       form.p7_seguimiento_estrategias, form.p8_comunicacion] %}
-                        <div class="component-card mb-4">
-                            <h4>{{ field.label }}</h4>
-                            {% for subfield in field %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input") }}
-                                <label class="form-check-label">
-                                    <span class="nivel-numero">{{ subfield.data }}</span>
-                                    {{ subfield.label.text }}
-                                </label>
-                            </div>
-                            {% endfor %}
+                    {% for field in [form.p1_identificacion_amenazas, form.p2_identificacion_vulnerabilidades, 
+                                   form.p3_analisis_riesgos, form.p4_valoracion_riesgos, 
+                                   form.p5_reduccion_riesgos, form.p6_monitoreo_revision,
+                                   form.p7_seguimiento_estrategias, form.p8_comunicacion] %}
+                    <div class="component-card mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <h4>{{ field.label }}</h4>
+                        {% for subfield in field %}
+                        <div class="form-check">
+                            {{ subfield(class="form-check-input") }}
+                            <label class="form-check-label" for="{{ subfield.id }}">
+                                <span class="nivel-numero">{{ loop.index0 }}</span>
+                                <span class="descriptor-text">{{ subfield.label.text }}</span>
+                            </label>
                         </div>
                         {% endfor %}
                     </div>
+                    {% endfor %}
+                </div>
 
-                    <div class="text-center form-buttons">
-                        <button type="submit" name="action" value="save_exit" class="btn btn-secondary btn-lg">
-                            <i class="fas fa-save"></i> Guardar y Salir
-                        </button>
-                        <button type="submit" name="action" value="save_continue" class="btn btn-continue btn-lg">
-                            <i class="fas fa-arrow-right"></i> Guardar y Continuar
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="form-buttons">
+                    <button type="submit" name="action" value="save_exit" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-save me-2"></i> Guardar y Salir
+                    </button>
+                    <button type="submit" name="action" value="save_continue" class="btn btn-continue btn-lg">
+                        <i class="fas fa-arrow-right me-2"></i> Guardar y Continuar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 {% endblock %} 

@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow">
+<div class="container mt-5" data-aos="fade-up">
+    <div class="card shadow-lg hover-card">
         <div class="card-header card-header-cruzroja">
             <h2 class="text-center mb-0">Lista de Evaluaciones</h2>
         </div>
         <div class="card-body">
             {% if evaluaciones %}
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table">
+                        <thead class="table-light">
                             <tr>
                                 <th>Empresa</th>
                                 <th>Fecha</th>
@@ -20,21 +20,25 @@
                         </thead>
                         <tbody>
                             {% for evaluacion in evaluaciones %}
-                            <tr>
+                            <tr class="hover-bg-light">
                                 <td>{{ evaluacion.empresa }}</td>
                                 <td>{{ evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                 <td>
                                     {% if evaluacion.estado == 'completo' %}
-                                        <span class="badge bg-success">Completo</span>
-                                    {% elif evaluacion.estado == 'parcial' %}
-                                        <span class="badge bg-warning">Parcial</span>
+                                    <span class="badge bg-success">Completo</span>
                                     {% else %}
-                                        <span class="badge bg-warning text-dark">Incompleto</span>
+                                    <span class="badge bg-warning">En progreso</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     <a href="{{ url_for('resultados', evaluacion_id=evaluacion.id) }}" 
-                                       class="btn btn-info btn-sm">Ver Detalles</a>
+                                       class="btn btn-sm btn-outline-danger me-2 hover-scale">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </a>
+                                    <a href="{{ url_for('exportar_pdf', evaluacion_id=evaluacion.id) }}" 
+                                       class="btn btn-sm btn-danger pulse-button">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -42,15 +46,71 @@
                     </table>
                 </div>
             {% else %}
-                <div class="alert alert-info">
-                    No hay evaluaciones disponibles.
+                <div class="text-center py-5" data-aos="fade-up">
+                    <i class="fas fa-clipboard-list fa-3x text-secondary mb-3"></i>
+                    <p class="text-secondary">No hay evaluaciones registradas</p>
                 </div>
             {% endif %}
-            
-            <div class="text-center mt-4">
-                <a href="{{ url_for('iniciar_evaluacion') }}" class="btn btn-primary btn-lg">Nueva Evaluación</a>
-            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+    
+    .hover-bg-light {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-bg-light:hover {
+        background-color: rgba(220,53,69,0.05);
+    }
+    
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: scale(1.05);
+    }
+    
+    .pulse-button {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .card {
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    }
+    
+    .card-header-cruzroja {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.5rem;
+    }
+</style>
 {% endblock %} 

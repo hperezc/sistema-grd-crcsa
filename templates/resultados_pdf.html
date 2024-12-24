@@ -2,201 +2,514 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>Informe de Evaluación de Madurez</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
             line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+            color: #333;
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #dc3545;
         }
-        .empresa-info {
+        .logo {
+            max-width: 150px;
             margin-bottom: 20px;
         }
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            page-break-inside: avoid;
         }
-        .section h4 {
+        .section-title {
             color: #dc3545;
             border-bottom: 2px solid #dc3545;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-        .resultado-item {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #dc3545;
+        }
+        .score {
+            font-size: 36px;
+            color: #dc3545;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .score-label {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: -10px;
+        }
+        .diagnostic-box {
+            background: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .summary-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .level-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .level-optimo { background: #28a745; color: white; }
+        .level-bueno { background: #17a2b8; color: white; }
+        .level-regular { background: #ffc107; color: black; }
+        .level-mejora { background: #dc3545; color: white; }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+        .note {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .dimension-title {
+            color: #dc3545;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dc3545;
+        }
+        
+        .componente-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #dc3545;
+            border-radius: 5px;
+            padding: 15px;
+            height: 120px; /* Altura fija más pequeña */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .componente-header {
+            display: flex;
+            flex-direction: column; /* Cambio a columna */
+            gap: 10px;
+        }
+        
+        .componente-header h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .calificacion-badge {
+            align-self: flex-end; /* Alinea el badge a la derecha */
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .valor-alcanzado {
+            margin-top: 10px;
+        }
+        
+        .progress-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            background: #f8f9fa;
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #dc3545;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .dimension-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #dc3545;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .dimension-diagnostic {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .kpi-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
+            gap: 15px;
+            margin: 20px 0 30px 0;
         }
-        .resultado-valor {
+        
+        .kpi-card {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px 20px;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .kpi-content {
+            text-align: left;
+        }
+        
+        .kpi-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .kpi-value {
+            font-size: 20px;
             font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .kpi-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .dimension-section {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+        
+        .dimension-section:last-child {
+            margin-bottom: 30px;
+        }
+        
+        .componentes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .componente-card {
+            width: calc(50% - 15px);
+            margin-bottom: 5px;
+        }
+        
+        .status-optimo {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-bueno {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .status-regular {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .status-mejora {
+            background: #dc3545;
+            color: white;
+        }
+
+        .dimension-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #dc3545;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .dimension-title {
+            margin: 0;
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .dimension-score {
+            margin-top: 10px;
+        }
+
+        .componentes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .componente-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #dc3545;
+            border-radius: 5px;
+            padding: 20px;
+            height: 150px; /* Altura fija para todas las tarjetas */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .componente-header {
+            margin-bottom: 15px;
+        }
+
+        .calificacion-badge {
+            float: right;
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .componente-title {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            padding-right: 70px; /* Espacio para el badge */
+        }
+
+        .valor-alcanzado {
+            margin-top: auto;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background: #f8f9fa;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #dc3545;
+            height: 100%;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2>Resultados de la Evaluación</h2>
-    </div>
-    
-    <div class="empresa-info">
-        <h3>Empresa: {{ evaluacion.empresa }}</h3>
-        <p>Fecha: {{ evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo Cruz Roja" class="logo">
+        <h1>Informe de Evaluación de Madurez - GRD</h1>
     </div>
 
-    <div class="section">
-        <h4>Procesos de Gestión del Riesgo</h4>
-        <div class="resultado-item">
-            <span>P1. Identificación de amenazas</span>
-            <span class="resultado-valor">{{ evaluacion.p1_identificacion_amenazas if evaluacion.p1_identificacion_amenazas is not none else '0' }}/4</span>
+    <!-- Sección de KPIs mejorada -->
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-content">
+                <div class="kpi-label">Empresa Evaluada</div>
+                <div class="kpi-value">{{ evaluacion.empresa }}</div>
+            </div>
         </div>
-        <div class="resultado-item">
-            <span>P2. Identificación vulnerabilidades</span>
-            <span class="resultado-valor">{{ evaluacion.p2_identificacion_vulnerabilidades if evaluacion.p2_identificacion_vulnerabilidades is not none else '0' }}/4</span>
+        
+        <div class="kpi-card">
+            <div class="kpi-content">
+                <div class="kpi-label">Puntaje Global</div>
+                {% set puntaje_total = evaluacion.calcular_puntaje_total() %}
+                <div class="kpi-value">{{ '%.2f'|format(puntaje_total) }}%</div>
+                <div class="kpi-status {% if puntaje_total >= 90 %}status-optimo{% elif puntaje_total >= 70 %}status-bueno{% elif puntaje_total >= 50 %}status-regular{% else %}status-mejora{% endif %}">
+                    {% if puntaje_total >= 90 %}
+                        Nivel Óptimo
+                    {% elif puntaje_total >= 70 %}
+                        Buen Nivel
+                    {% elif puntaje_total >= 50 %}
+                        Nivel Regular
+                    {% else %}
+                        Requiere Mejora
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="resultado-item">
-            <span>P3. Análisis de riesgos</span>
-            <span class="resultado-valor">{{ evaluacion.p3_analisis_riesgos if evaluacion.p3_analisis_riesgos is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>P4. Valoración de riesgos</span>
-            <span class="resultado-valor">{{ evaluacion.p4_valoracion_riesgos if evaluacion.p4_valoracion_riesgos is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>P5. Reducción de riesgos</span>
-            <span class="resultado-valor">{{ evaluacion.p5_reduccion_riesgos if evaluacion.p5_reduccion_riesgos is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>P6. Monitoreo y revisión</span>
-            <span class="resultado-valor">{{ evaluacion.p6_monitoreo_revision if evaluacion.p6_monitoreo_revision is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>P7. Seguimiento a estrategias</span>
-            <span class="resultado-valor">{{ evaluacion.p7_seguimiento_estrategias if evaluacion.p7_seguimiento_estrategias is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>P8. Comunicación y consulta</span>
-            <span class="resultado-valor">{{ evaluacion.p8_comunicacion if evaluacion.p8_comunicacion is not none else '0' }}/4</span>
+        
+        <div class="kpi-card">
+            <div class="kpi-content">
+                <div class="kpi-label">Fecha de Evaluación</div>
+                <div class="kpi-value">{{ evaluacion.fecha.strftime('%d/%m/%Y') }}</div>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h4>Regulaciones, Resiliencia y Protección Financiera</h4>
-        <div class="resultado-item">
-            <span>PT1. Adopción de certificaciones</span>
-            <span class="resultado-valor">{{ evaluacion.pt1_adopcion_certificaciones if evaluacion.pt1_adopcion_certificaciones is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT2. Regulaciones nacionales</span>
-            <span class="resultado-valor">{{ evaluacion.pt2_regulaciones_nacionales if evaluacion.pt2_regulaciones_nacionales is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT3. Plan de Gestión del Riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.pt3_plan_gestion_riesgo if evaluacion.pt3_plan_gestion_riesgo is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT4. Política de Gestión del Riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.pt4_politica_gestion_riesgo if evaluacion.pt4_politica_gestion_riesgo is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT5. Política de Seguridad Operacional</span>
-            <span class="resultado-valor">{{ evaluacion.pt5_politica_seguridad if evaluacion.pt5_politica_seguridad is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT6. Sistema SARLAFT</span>
-            <span class="resultado-valor">{{ evaluacion.pt6_sistema_sarlaft if evaluacion.pt6_sistema_sarlaft is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT7. Memoria de emergencias</span>
-            <span class="resultado-valor">{{ evaluacion.pt7_memoria_emergencias if evaluacion.pt7_memoria_emergencias is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT8. Planes de emergencia</span>
-            <span class="resultado-valor">{{ evaluacion.pt8_planes_emergencia if evaluacion.pt8_planes_emergencia is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>PT9. Seguros y pólizas</span>
-            <span class="resultado-valor">{{ evaluacion.pt9_seguros_polizas if evaluacion.pt9_seguros_polizas is not none else '0' }}/4</span>
-        </div>
+    <!-- Texto Introductorio -->
+    <div class="intro-text">
+        <h2>Sobre esta Evaluación</h2>
+        <p>Este informe presenta los resultados de la evaluación de madurez en Gestión del Riesgo de Desastres (GRD) 
+           realizada para {{ evaluacion.empresa }}. La evaluación analiza cinco dimensiones clave: Procesos, 
+           Regulaciones, Equipamiento, Integración y Organización. Cada dimensión contiene componentes específicos 
+           que se califican en una escala de 0 a 4, donde:</p>
+        <ul>
+            <li><strong>4 puntos (100%):</strong> Nivel Integral y Transversal - Implementación óptima con mejora continua</li>
+            <li><strong>3 puntos (75%):</strong> Nivel Avanzado - Buena implementación con controles establecidos</li>
+            <li><strong>2 puntos (50%):</strong> Nivel Parcial - Implementación básica con aspectos por mejorar</li>
+            <li><strong>1 punto (25%):</strong> Nivel Incipiente - Implementación mínima o informal</li>
+            <li><strong>0 puntos (0%):</strong> Nivel Inexistente - No implementado</li>
+        </ul>
     </div>
 
-    <div class="section">
-        <h4>Equipamiento, Materiales, Insumos y Capacidades Técnicas</h4>
-        <div class="resultado-item">
-            <span>EQ1. Control de acceso</span>
-            <span class="resultado-valor">{{ evaluacion.eq1_control_acceso if evaluacion.eq1_control_acceso is not none else '0' }}/4</span>
+    <!-- Análisis por Dimensión -->
+    {% for dimension in dimension_weights.keys() %}
+    <div class="dimension-section">
+        <div class="dimension-header">
+            <h2 class="dimension-title">
+                {% if dimension == 'procesos' %}
+                    Dimensión 1: Procesos de Gestión del Riesgo de Desastres
+                {% elif dimension == 'regulaciones' %}
+                    Dimensión 2: Regulaciones y Protección Financiera
+                {% elif dimension == 'equipamiento' %}
+                    Dimensión 3: Equipamiento y Capacidades Técnicas
+                {% elif dimension == 'integracion' %}
+                    Dimensión 4: Integración y Transversalidad
+                {% elif dimension == 'organizacion' %}
+                    Dimensión 5: Organización y Recursos
+                {% endif %}
+            </h2>
+            {% set puntaje = evaluacion.calcular_puntaje_dimension(dimension) %}
+            <div class="dimension-score">
+                <span class="level-indicator {% if puntaje >= 90 %}level-optimo{% elif puntaje >= 70 %}level-bueno{% elif puntaje >= 50 %}level-regular{% else %}level-mejora{% endif %}">
+                    {{ '%.2f'|format(puntaje) }}% | Peso: {{ dimension_weights[dimension] }}%
+                </span>
+            </div>
         </div>
-        <div class="resultado-item">
-            <span>EQ2. Controles de seguridad física</span>
-            <span class="resultado-valor">{{ evaluacion.eq2_controles_seguridad if evaluacion.eq2_controles_seguridad is not none else '0' }}/4</span>
+
+        <!-- Diagnóstico de la Dimensión -->
+        <div class="dimension-diagnostic">
+            <h4>Diagnóstico de la Dimensión</h4>
+            <p>{{ evaluacion.obtener_diagnostico(dimension) }}</p>
         </div>
-        <div class="resultado-item">
-            <span>EQ3. Controles de ciberseguridad</span>
-            <span class="resultado-valor">{{ evaluacion.eq3_controles_ciberseguridad if evaluacion.eq3_controles_ciberseguridad is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>EQ4. Redes/Sistemas de detección</span>
-            <span class="resultado-valor">{{ evaluacion.eq4_redes_deteccion if evaluacion.eq4_redes_deteccion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>EQ5. Brigadas para respuesta</span>
-            <span class="resultado-valor">{{ evaluacion.eq5_brigadas_respuesta if evaluacion.eq5_brigadas_respuesta is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>EQ6. Formación y capacitación</span>
-            <span class="resultado-valor">{{ evaluacion.eq6_formacion_capacitacion if evaluacion.eq6_formacion_capacitacion is not none else '0' }}/4</span>
+
+        <!-- Componentes en formato de tarjetas -->
+        <div class="componentes-container">
+            {% for componente in component_weights[dimension].keys() %}
+            {% set valor = getattr(evaluacion, componente)|float if getattr(evaluacion, componente) is not none else 0.0 %}
+            <div class="componente-card">
+                <div class="componente-header">
+                    <div class="calificacion-badge">{{ '%.0f'|format(valor) }}/4</div>
+                    <h4 class="componente-title">
+                        {% if componente == 'it1_transversalizacion' %}
+                            IT1. Transversalización de la Gestión
+                        {% elif componente == 'it2_protocolos_comunicacion' %}
+                            IT2. Protocolos de Comunicación
+                        {% elif componente == 'it3_planes_ayuda' %}
+                            IT3. Planes de Ayuda Mutua
+                        {% elif componente == 'it5_retroalimentacion' %}
+                            IT5. Retroalimentación y Mejora
+                        {% elif componente == 'it6_mecanismos_articulacion' %}
+                            IT6. Mecanismos de Articulación
+                        {% elif componente == 'p1_identificacion_amenazas' %}
+                            P1. Identificación de Amenazas
+                        {% elif componente == 'p2_identificacion_vulnerabilidades' %}
+                            P2. Identificación de Vulnerabilidades
+                        {% elif componente == 'p3_analisis_riesgos' %}
+                            P3. Análisis de Riesgos
+                        {% elif componente == 'p4_valoracion_riesgos' %}
+                            P4. Valoración de Riesgos
+                        {% elif componente == 'pt1_adopcion_certificaciones' %}
+                            PT1. Adopción de Certificaciones
+                        {% elif componente == 'pt2_regulaciones_nacionales' %}
+                            PT2. Regulaciones Nacionales
+                        {% elif componente == 'eq1_control_acceso' %}
+                            EQ1. Control de Acceso
+                        {% elif componente == 'eq2_controles_seguridad' %}
+                            EQ2. Controles de Seguridad
+                        {% elif componente == 'eq3_controles_ciberseguridad' %}
+                            EQ3. Controles de Ciberseguridad
+                        {% elif componente == 'eq4_redes_deteccion' %}
+                            EQ4. Redes de Detección
+                        {% elif componente == 'eq5_brigadas_respuesta' %}
+                            EQ5. Brigadas de Respuesta
+                        {% elif componente == 'eq6_formacion_capacitacion' %}
+                            EQ6. Formación y Capacitación
+                        {% elif componente == 'or1_area_gestion' %}
+                            OR1. Área de Gestión
+                        {% elif componente == 'or2_presupuesto' %}
+                            OR2. Presupuesto
+                        {% elif componente == 'or3_personal_dedicacion' %}
+                            OR3. Personal con Dedicación
+                        {% elif componente == 'or4_proyectos_gestion' %}
+                            OR4. Proyectos de Gestión
+                        {% elif componente == 'or5_inclusion_gestion' %}
+                            OR5. Inclusión en la Gestión
+                        {% else %}
+                            {{ componente|replace('_', ' ')|title }}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="valor-alcanzado">
+                    <div class="progress-label">Valor alcanzado: {{ '%.2f'|format(valor * 25) }}%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ valor * 25 }}%;"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
+    {% endfor %}
 
-    <div class="section">
-        <h4>Integración y Transversalidad</h4>
-        <div class="resultado-item">
-            <span>IT1. Transversalización de la gestión del riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.it1_transversalizacion if evaluacion.it1_transversalizacion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>IT2. Protocolos de comunicación</span>
-            <span class="resultado-valor">{{ evaluacion.it2_protocolos_comunicacion if evaluacion.it2_protocolos_comunicacion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>IT3. Planes de ayuda mutua</span>
-            <span class="resultado-valor">{{ evaluacion.it3_planes_ayuda if evaluacion.it3_planes_ayuda is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>IT5. Retroalimentación</span>
-            <span class="resultado-valor">{{ evaluacion.it5_retroalimentacion if evaluacion.it5_retroalimentacion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>IT6. Mecanismos de articulación</span>
-            <span class="resultado-valor">{{ evaluacion.it6_mecanismos_articulacion if evaluacion.it6_mecanismos_articulacion is not none else '0' }}/4</span>
-        </div>
+    <div class="note">
+        <p><strong>Visualización Interactiva:</strong> Puede ver los resultados detallados en: <a href="{{ resultados_url }}">{{ resultados_url }}</a></p>
     </div>
 
-    <div class="section">
-        <h4>Organización</h4>
-        <div class="resultado-item">
-            <span>OR1. Área de gestión del riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.or1_area_gestion if evaluacion.or1_area_gestion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>OR2. Presupuesto para gestión del riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.or2_presupuesto if evaluacion.or2_presupuesto is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>OR3. Personal con dedicación 100%</span>
-            <span class="resultado-valor">{{ evaluacion.or3_personal_dedicacion if evaluacion.or3_personal_dedicacion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>OR4. Proyectos en gestión del riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.or4_proyectos_gestion if evaluacion.or4_proyectos_gestion is not none else '0' }}/4</span>
-        </div>
-        <div class="resultado-item">
-            <span>OR5. Inclusión en la Gestión de Riesgo</span>
-            <span class="resultado-valor">{{ evaluacion.or5_inclusion_gestion if evaluacion.or5_inclusion_gestion is not none else '0' }}/4</span>
-        </div>
+    <div class="footer">
+        <p>© Cruz Roja Colombiana - {{ evaluacion.fecha.strftime('%Y') }} | Documento Confidencial</p>
     </div>
 </body>
-</html> 
+</html>

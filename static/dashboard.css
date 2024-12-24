@@ -1,0 +1,565 @@
+/* Efectos generales */
+.dashboard-container {
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* Efectos para las tarjetas KPI */
+.kpi-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.kpi-card .card-body {
+    padding: 1.5rem;
+}
+
+.kpi-card i {
+    color: #dc3545;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover i {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+/* Colores específicos para los bordes de los KPIs */
+.kpi-card.border-left.border-primary {
+    border-left: 4px solid #007bff !important;
+}
+
+.kpi-card.border-left.border-success {
+    border-left: 4px solid #28a745 !important;
+}
+
+.kpi-card.border-left.border-danger {
+    border-left: 4px solid #dc3545 !important;
+}
+
+.kpi-card.border-left.border-warning {
+    border-left: 4px solid #ffc107 !important;
+}
+
+/* Efectos para las tarjetas de gráficos */
+.card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #dc3545, #ffc107, #4caf50);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Estilo para el header del dashboard */
+.dashboard-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+    text-align: center;
+}
+
+.dashboard-header h1 {
+    position: relative;
+    display: inline-block;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.dashboard-header h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #dc3545, #ffc107);
+    border-radius: 2px;
+}
+
+.dashboard-header p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Estilo para el dropdown */
+.dropdown-container {
+    position: relative;
+    z-index: 1000;
+    margin-bottom: 2rem;
+}
+
+.Select-control {
+    border: 2px solid #e9ecef !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+}
+
+.Select-control:hover {
+    border-color: #dc3545 !important;
+}
+
+/* Animaciones para los gráficos */
+.graph-container {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilo para el footer */
+.dashboard-footer {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Efectos de loading */
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #dc3545;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilos para tooltips */
+.tooltip-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.7);
+    cursor: help;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.tooltip-icon:hover {
+    color: white;
+}
+
+.card-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo para el contenedor del título y el ícono */
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilos para el tooltip personalizado */
+.custom-tooltip {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    width: 200px;
+    
+    /* Posicionamiento */
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Transición suave */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Flecha del tooltip */
+.custom-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+/* Mostrar tooltip al hover */
+.tooltip-container:hover .custom-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Ajustes para el contenedor del header */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+
+/* Asegurar que los gráficos no tapen los tooltips */
+.chart-card {
+    overflow: visible !important;
+}
+
+.card-header {
+    overflow: visible !important;
+    z-index: 10;
+}
+
+/* Ajustes para los KPIs en móvil */
+@media (max-width: 575.98px) {
+    .kpi-card {
+        margin-bottom: 1rem;
+    }
+
+    .kpi-card .card-body {
+        padding: 0.75rem;
+    }
+
+    .kpi-card i {
+        font-size: 20px;
+    }
+
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Ajustes para mantener la legibilidad en pantallas pequeñas */
+@media (max-width: 400px) {
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-header p {
+        font-size: 0.875rem;
+    }
+
+    .card-header {
+        padding: 0.75rem;
+    }
+
+    .tooltip-icon {
+        display: none;
+    }
+}
+
+/* Ajustes para asegurar que los gráficos sean responsivos */
+.js-plotly-plot .plot-container {
+    width: 100% !important;
+}
+
+/* Mejorar la visualización de los tooltips en móvil */
+@media (hover: none) {
+    .tooltip-container:hover .custom-tooltip {
+        display: none;
+    }
+}
+
+/* Ajustes para el espaciado en diferentes tamaños de pantalla */
+.container-fluid {
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
+}
+
+@media (min-width: 992px) {
+    .container-fluid {
+        padding-right: var(--bs-gutter-x, 1.5rem);
+        padding-left: var(--bs-gutter-x, 1.5rem);
+    }
+}
+
+/* Asegurar que los gráficos mantengan una proporción adecuada */
+.graph-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Proporción 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+
+.graph-container > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ajustes para los KPIs */
+@media (max-width: 575.98px) {
+    .kpi-card {
+        margin-bottom: 1rem;
+    }
+    
+    .kpi-card .card-body {
+        padding: 1rem;
+    }
+    
+    .kpi-card i {
+        font-size: 20px !important;
+    }
+    
+    .kpi-card h4 {
+        font-size: 1.25rem;
+    }
+    
+    .kpi-card h6 {
+        font-size: 0.875rem;
+    }
+}
+
+/* Ajustes para tablets */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .kpi-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .kpi-card .card-body {
+        padding: 1.25rem;
+    }
+}
+
+/* Ajustes para los gráficos en móvil */
+@media (max-width: 767.98px) {
+    /* Aumentar el tamaño de los gráficos */
+    .graph-container {
+        padding-bottom: 75%; /* Aumentado de 56.25% para hacer los gráficos más altos */
+        margin-bottom: 1.5rem; /* Más espacio entre gráficos */
+    }
+
+    /* Ajustar el contenedor de los gráficos */
+    .card-body.graph-container {
+        padding: 0.5rem; /* Reducir el padding para dar más espacio al gráfico */
+    }
+
+    /* Hacer los gráficos más grandes dentro de sus contenedores */
+    .js-plotly-plot {
+        transform: scale(1.1); /* Hacer el gráfico un poco más grande */
+        transform-origin: center center;
+    }
+}
+
+/* Aumentar la separación entre KPIs */
+@media (max-width: 575.98px) {
+    .kpi-card {
+        margin-bottom: 2rem !important; /* Más separación entre KPIs en móvil */
+    }
+    
+    /* Ajustar el último KPI para que no tenga margen inferior extra */
+    .kpi-card:last-child {
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Ajustes específicos para el gráfico de radar y gauge en móvil */
+@media (max-width: 767.98px) {
+    #radar-chart, #gauge-chart {
+        height: 350px !important; /* Aumentar altura */
+    }
+    
+    /* Contenedor específico para radar y gauge */
+    #radar-chart .graph-container, 
+    #gauge-chart .graph-container {
+        padding-bottom: 100%; /* Mantener proporción cuadrada */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Aumentar el zoom de estos gráficos específicos */
+    #radar-chart .js-plotly-plot, 
+    #gauge-chart .js-plotly-plot {
+        transform: scale(1.2); /* Aumentar zoom */
+        transform-origin: center center;
+        margin: 0 auto; /* Centrar horizontalmente */
+    }
+
+    /* Ajustar el contenedor para evitar scroll horizontal */
+    #radar-chart .plot-container,
+    #gauge-chart .plot-container {
+        width: 90% !important;
+        margin: 0 auto;
+    }
+}
+
+/* Ajustes adicionales para las tarjetas que contienen estos gráficos */
+@media (max-width: 767.98px) {
+    #radar-chart .card-body,
+    #gauge-chart .card-body {
+        padding: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+    }
+}
+
+/* Ajustar el espaciado entre filas de gráficos */
+.row {
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .row {
+        margin-bottom: 0; /* Eliminar margen entre filas en móvil */
+    }
+    
+    .chart-card {
+        margin-bottom: 2rem !important; /* Aumentar separación entre tarjetas de gráficos */
+    }
+}
+
+/* Asegurar que los gráficos mantengan buena visibilidad */
+.js-plotly-plot .plot-container {
+    height: auto !important;
+    min-height: 250px;
+}
+
+/* Ajustes para el contenedor de las tarjetas */
+.card {
+    height: auto !important;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .card {
+        margin-bottom: 2rem;
+    }
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.tooltip-icon {
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-tooltip {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    width: 200px;
+    
+    /* Posicionamiento */
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Transición suave */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Flecha del tooltip */
+.custom-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+/* Mostrar tooltip al hover */
+.tooltip-container:hover .custom-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Ajustes para el contenedor del header */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+
+/* Asegurar que los gráficos no tapen los tooltips */
+.chart-card {
+    overflow: visible !important;
+}
+
+.card-header {
+    overflow: visible !important;
+    z-index: 10;
+} 
