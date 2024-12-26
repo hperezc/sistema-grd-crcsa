@@ -66,7 +66,3 @@ Visit ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onr
 - 🌐 Website: ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) 
 
 ---
-
-### Screenshots
-![Dashboard Screenshot](url-to-dashboard-screenshot.png)
-![Results Screenshot](url-to-results-screenshot.png)
