@@ -22,7 +22,7 @@ Sistema web desarrollado para la Cruz Roja Colombiana Seccional Antioquia, dise�
 - 🔒 Panel de administración para gestión de evaluaciones
 
 ### Acceso al Sistema
-Visite ([[](https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) para acceder al sistema.
+Visite ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) para acceder al sistema.
 
 ### Uso del Sistema
 1. Acceda a la página principal
@@ -52,7 +52,7 @@ Web system developed for the Colombian Red Cross Antioquia Section, designed to 
 - 🔒 Admin panel for assessment management
 
 ### System Access
-Visit ([](https://sistema-grd-crcsa.onrender.com/)) to access the system.
+Visit ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/))  to access the system.
 
 ### System Usage
 1. Access the main page
@@ -63,7 +63,7 @@ Visit ([](https://sistema-grd-crcsa.onrender.com/)) to access the system.
 
 ### Contact
 - 📧 Email: hectorcperez21@gmail.com
-- 🌐 Website: [](https://sistema-grd-crcsa.onrender.com/)
+- 🌐 Website: ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) 
 
 ---
 
