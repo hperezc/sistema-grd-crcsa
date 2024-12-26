@@ -379,14 +379,16 @@ def init_dashboard(server):
         pareto_fig.update_layout(
             yaxis=dict(
                 title='Valor (%)',
-                range=[0, 100]
+                range=[0, 100],
+                tickfont=dict(size=10)
             ),
             yaxis2=dict(
                 title='Acumulado (%)',
                 overlaying='y',
                 side='right',
                 range=[0, 100],
-                showgrid=False
+                showgrid=False,
+                tickfont=dict(size=10)
             ),
             paper_bgcolor='white',
             plot_bgcolor='white',
@@ -394,11 +396,29 @@ def init_dashboard(server):
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
+                y=1.15,
+                xanchor="center",
+                x=0.5,
+                font=dict(size=10)
             ),
-            margin=dict(t=30, b=30, l=30, r=30)
+            margin=dict(
+                l=50,
+                r=50,
+                t=100,
+                b=150,
+                pad=4
+            ),
+            height=400,
+            xaxis=dict(
+                tickangle=45,
+                tickfont=dict(size=10)
+            )
+        )
+
+        # Asegurarse de que los gráficos se ajusten al contenedor
+        pareto_fig.update_layout(
+            autosize=False,
+            width=None
         )
 
         # Gráfico de Gap
@@ -436,25 +456,40 @@ def init_dashboard(server):
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
-                y=1.1,
+                y=1.15,
                 xanchor="center",
                 x=0.5,
                 bgcolor='rgba(255, 255, 255, 0.8)',
+                font=dict(size=10)
             ),
-            margin=dict(l=20, r=20, t=50, b=20),
+            margin=dict(
+                l=50,
+                r=50,
+                t=100,
+                b=150,
+                pad=4
+            ),
             paper_bgcolor='white',
             plot_bgcolor='white',
-            height=350,
+            height=400,
             bargap=0.15,
             yaxis=dict(
                 title="Porcentaje (%)",
                 gridcolor='lightgray',
-                range=[0, 100]
+                range=[0, 100],
+                tickfont=dict(size=10)
             ),
             xaxis=dict(
                 tickangle=45,
-                showgrid=False
+                showgrid=False,
+                tickfont=dict(size=10)
             )
+        )
+
+        # Asegurarse de que los gráficos se ajusten al contenedor
+        gap_fig.update_layout(
+            autosize=False,
+            width=None
         )
 
         return radar_fig, stacked_fig, gauge_fig, heatmap_fig, pareto_fig, gap_fig
