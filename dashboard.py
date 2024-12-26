@@ -66,44 +66,44 @@ def init_dashboard(server):
                         # KPI Puntaje Total
                         html.Div([
                             html.Div([
-                                html.I(className="fas fa-chart-line mb-3", style={'font-size': '24px'}),
-                                html.H6("Puntaje Total", className="text-muted mb-1"),
+                                html.I(className="fas fa-chart-line mb-2", style={'font-size': '20px'}),
+                                html.H6("Puntaje Total", className="text-muted mb-1 small"),
                                 html.H4(id="kpi-puntaje-total", className="mb-0"),
                                 html.Span("Nivel de Madurez", className="text-muted small")
                             ], className="card-body text-center")
-                        ], className="card kpi-card shadow-sm mb-4 border-left border-primary"),
+                        ], className="card kpi-card shadow-sm border-left border-primary"),
                         
                         # KPI Mejor Dimensión
                         html.Div([
                             html.Div([
-                                html.I(className="fas fa-arrow-up mb-3", style={'font-size': '24px'}),
-                                html.H6("Mejor Dimensión", className="text-muted mb-1"),
+                                html.I(className="fas fa-arrow-up mb-2", style={'font-size': '20px'}),
+                                html.H6("Mejor Dimensión", className="text-muted mb-1 small"),
                                 html.H4(id="kpi-mejor-dimension", className="mb-0"),
                                 html.Span(id="kpi-mejor-dimension-valor", className="text-muted small")
                             ], className="card-body text-center")
-                        ], className="card kpi-card shadow-sm mb-4 border-left border-success"),
+                        ], className="card kpi-card shadow-sm border-left border-success"),
                         
                         # KPI Peor Dimensión
                         html.Div([
                             html.Div([
-                                html.I(className="fas fa-arrow-down mb-3", style={'font-size': '24px'}),
-                                html.H6("Peor Dimensión", className="text-muted mb-1"),
+                                html.I(className="fas fa-arrow-down mb-2", style={'font-size': '20px'}),
+                                html.H6("Peor Dimensión", className="text-muted mb-1 small"),
                                 html.H4(id="kpi-peor-dimension", className="mb-0"),
                                 html.Span(id="kpi-peor-dimension-valor", className="text-muted small")
                             ], className="card-body text-center")
-                        ], className="card kpi-card shadow-sm mb-4 border-left border-danger"),
+                        ], className="card kpi-card shadow-sm border-left border-danger"),
                         
                         # KPI Mayor Brecha
                         html.Div([
                             html.Div([
-                                html.I(className="fas fa-exclamation-triangle mb-3", style={'font-size': '24px'}),
-                                html.H6("Mayor Brecha", className="text-muted mb-1"),
+                                html.I(className="fas fa-exclamation-triangle mb-2", style={'font-size': '20px'}),
+                                html.H6("Mayor Brecha", className="text-muted mb-1 small"),
                                 html.H4(id="kpi-mayor-brecha", className="mb-0"),
                                 html.Span(id="kpi-mayor-brecha-valor", className="text-muted small")
                             ], className="card-body text-center")
-                        ], className="card kpi-card shadow-sm mb-4 border-left border-warning")
-                    ], className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 g-lg-3 mb-4 mb-lg-5")
-                ], className="container-fluid")
+                        ], className="card kpi-card shadow-sm border-left border-warning")
+                    ], className="row row-cols-2 row-cols-sm-2 row-cols-lg-4 g-2 g-lg-3 mb-3"),
+                ], className="container-fluid px-2")
             ], className="bg-light p-3 rounded shadow-sm mb-4"),
 
             # Gráficos (ajustados para mejor responsividad)
@@ -380,7 +380,8 @@ def init_dashboard(server):
             yaxis=dict(
                 title='Valor (%)',
                 range=[0, 100],
-                tickfont=dict(size=10)
+                tickfont=dict(size=10),
+                automargin=True
             ),
             yaxis2=dict(
                 title='Acumulado (%)',
@@ -404,9 +405,8 @@ def init_dashboard(server):
             margin=dict(
                 l=50,
                 r=50,
-                t=100,
-                b=150,
-                pad=4
+                t=20,
+                b=80
             ),
             height=400,
             xaxis=dict(
@@ -465,9 +465,8 @@ def init_dashboard(server):
             margin=dict(
                 l=50,
                 r=50,
-                t=100,
-                b=150,
-                pad=4
+                t=20,
+                b=80
             ),
             paper_bgcolor='white',
             plot_bgcolor='white',
@@ -477,7 +476,8 @@ def init_dashboard(server):
                 title="Porcentaje (%)",
                 gridcolor='lightgray',
                 range=[0, 100],
-                tickfont=dict(size=10)
+                tickfont=dict(size=10),
+                automargin=True
             ),
             xaxis=dict(
                 tickangle=45,

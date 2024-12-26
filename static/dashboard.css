@@ -15,7 +15,12 @@
 }
 
 .kpi-card .card-body {
-    padding: 1.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .kpi-card i {
@@ -131,16 +136,17 @@
 
 /* Animaciones para los gráficos */
 .graph-container {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.5s ease forwards;
+    position: relative;
+    height: auto;
+    overflow: visible;
+    min-height: 350px;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.graph-container > div {
+    position: relative;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 350px;
 }
 
 /* Estilo para el footer */
@@ -269,27 +275,93 @@
     z-index: 10;
 }
 
-/* Ajustes para los KPIs en móvil */
+/* Eliminar márgenes y paddings innecesarios */
+.mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+.bg-light.p-3 {
+    padding: 0.75rem !important;
+}
+
+/* Ajustes base para KPIs */
+.kpi-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 10px;
+    height: 100%;
+}
+
+/* Ajustes específicos para móvil */
 @media (max-width: 575.98px) {
     .kpi-card {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        height: 110px !important;  /* Altura fija más pequeña */
+        min-height: unset !important;  /* Eliminar altura mínima */
     }
-
+    
     .kpi-card .card-body {
-        padding: 0.75rem;
+        padding: 0.75rem 0.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-
+    
     .kpi-card i {
-        font-size: 20px;
+        font-size: 16px !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .kpi-card h4 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem !important;
+        line-height: 1.2;
+    }
+    
+    .kpi-card h6 {
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem !important;
+        line-height: 1;
     }
 
-    .dashboard-container {
-        padding: 0.5rem;
+    .kpi-card .text-muted.small {
+        font-size: 0.7rem !important;
+        line-height: 1;
     }
 
-    .card {
-        margin-bottom: 1rem;
+    /* Ajustar espaciado del contenedor */
+    .bg-light.p-3 {
+        padding: 0.5rem !important;
     }
+
+    /* Ajustar el grid */
+    .row-cols-2 > * {
+        padding: 0.25rem;  /* Reducir el espacio entre tarjetas */
+    }
+
+    .mb-3 {
+        margin-bottom: 0.5rem !important;
+    }
+}
+
+/* Ajustes para el contenedor de KPIs */
+.row-cols-1 {
+    margin: -0.5rem;
+}
+
+.col-12 {
+    padding: 0.5rem;
+}
+
+/* Asegurar que los KPIs mantengan su aspecto en todos los dispositivos */
+.kpi-card .text-muted {
+    font-size: 0.875rem !important;
+}
+
+.kpi-card .mb-3 {
+    margin-bottom: 1rem !important;
 }
 
 /* Ajustes para mantener la legibilidad en pantallas pequeñas */
@@ -314,6 +386,7 @@
 /* Ajustes para asegurar que los gráficos sean responsivos */
 .js-plotly-plot .plot-container {
     width: 100% !important;
+    height: 100% !important;
 }
 
 /* Mejorar la visualización de los tooltips en móvil */
@@ -334,22 +407,6 @@
         padding-right: var(--bs-gutter-x, 1.5rem);
         padding-left: var(--bs-gutter-x, 1.5rem);
     }
-}
-
-/* Asegurar que los gráficos mantengan una proporción adecuada */
-.graph-container {
-    position: relative;
-    padding-bottom: 56.25%; /* Proporción 16:9 */
-    height: 0;
-    overflow: hidden;
-}
-
-.graph-container > div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100% !important;
-    height: 100% !important;
 }
 
 /* Ajustes para los KPIs */
@@ -388,21 +445,28 @@
 
 /* Ajustes para los gráficos en móvil */
 @media (max-width: 767.98px) {
-    /* Aumentar el tamaño de los gráficos */
     .graph-container {
-        padding-bottom: 75%; /* Aumentado de 56.25% para hacer los gráficos más altos */
-        margin-bottom: 1.5rem; /* Más espacio entre gráficos */
+        min-height: 350px;
+        margin-bottom: 1rem;
     }
 
-    /* Ajustar el contenedor de los gráficos */
-    .card-body.graph-container {
-        padding: 0.5rem; /* Reducir el padding para dar más espacio al gráfico */
+    .graph-container > div {
+        min-height: 350px;
     }
 
-    /* Hacer los gráficos más grandes dentro de sus contenedores */
     .js-plotly-plot {
-        transform: scale(1.1); /* Hacer el gráfico un poco más grande */
-        transform-origin: center center;
+        transform: none !important;
+    }
+
+    .card {
+        height: auto !important;
+        min-height: 400px;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-body {
+        padding: 0.5rem;
+        height: auto;
     }
 }
 
@@ -562,4 +626,55 @@
 .card-header {
     overflow: visible !important;
     z-index: 10;
+}
+
+/* Eliminar márgenes y paddings innecesarios */
+.mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+.bg-light.p-3 {
+    padding: 0.75rem !important;
+}
+
+/* Ajustes para las tarjetas de Pareto y Brechas */
+@media (max-width: 767.98px) {
+    /* Ajustes específicos para estos gráficos */
+    #pareto-chart .card-body,
+    #gap-chart .card-body {
+        padding: 0.5rem;
+        min-height: 350px;  /* Reducido */
+    }
+
+    #pareto-chart .graph-container,
+    #gap-chart .graph-container {
+        min-height: 350px;  /* Reducido */
+    }
+
+    #pareto-chart .js-plotly-plot,
+    #gap-chart .js-plotly-plot {
+        height: 350px !important;  /* Altura fija más pequeña */
+    }
+
+    /* Ajustar el contenedor de la tarjeta */
+    #pareto-chart.card,
+    #gap-chart.card {
+        margin-bottom: 1rem;
+        height: auto !important;
+    }
+}
+
+/* Ajustes generales para los gráficos */
+.graph-container {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    min-height: 350px;  /* Reducido */
+}
+
+.graph-container > div {
+    position: relative;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 350px;  /* Reducido */
 } 
