@@ -22,7 +22,7 @@ Sistema web desarrollado para la Cruz Roja Colombiana Seccional Antioquia, dise�
 - 🔒 Panel de administración para gestión de evaluaciones
 
 ### Acceso al Sistema
-Visite ([](https://sistema-grd-crcsa.onrender.com/)) para acceder al sistema.
+Visite ([[](https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) para acceder al sistema.
 
 ### Uso del Sistema
 1. Acceda a la página principal
