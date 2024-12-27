@@ -1,8 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, send_file, jsonify, make_response, current_app
+from flask import Flask, render_template, redirect, url_for, flash, request, send_file, jsonify, make_response, current_app, session
 from flask_wtf import FlaskForm
-from wtforms import StringField, RadioField, SubmitField, PasswordField, SelectField
+from wtforms import StringField, RadioField, SubmitField, PasswordField, SelectField, IntegerField
 from wtforms.validators import DataRequired, Email
-from models import db, Evaluacion, Admin
+from models import db, Evaluacion, Admin, Departamento, Municipio
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from dashboard import init_dashboard
 from weasyprint import HTML
@@ -37,24 +37,45 @@ import plotly.io as pio
 from concurrent.futures import ThreadPoolExecutor
 import time
 import threading
+import requests
+from flask_caching import Cache
 
 load_dotenv()
 
 class IniciarEvaluacionForm(FlaskForm):
     empresa = StringField('Nombre de la Empresa', validators=[DataRequired()])
-    email = StringField('Correo Electrónico', validators=[DataRequired(), Email()])
+    nit = StringField('NIT', validators=[DataRequired()])
+    departamento = SelectField('Departamento', choices=[], validators=[DataRequired()])
+    ciudad = SelectField('Ciudad/Municipio', choices=[], validators=[DataRequired()])
+    cantidad_empleados = IntegerField('Cantidad de Empleados', validators=[DataRequired()])
+    responsable = StringField('Nombre del Responsable', validators=[DataRequired()])
+    rol = StringField('Rol/Cargo', validators=[DataRequired()])
+    telefono_fijo = StringField('Teléfono Fijo')
+    celular = StringField('Celular', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     sector = SelectField('Sector', choices=[
         ('', 'Seleccione un sector'),
-        ('industrial', 'Industrial'),
-        ('comercial', 'Comercial'),
-        ('servicios', 'Servicios'),
-        ('salud', 'Salud'),
-        ('educacion', 'Educación'),
-        ('tecnologia', 'Tecnología'),
-        ('otro', 'Otro')
+        ('Agricultura', 'Agricultura'),
+        ('Minería', 'Minería'),
+        ('Manufactura', 'Manufactura'),
+        ('Energía', 'Energía'),
+        ('Agua', 'Agua'),
+        ('Construcción', 'Construcción'),
+        ('Comercio', 'Comercio'),
+        ('Transporte', 'Transporte'),
+        ('Alojamiento', 'Alojamiento'),
+        ('Información', 'Información'),
+        ('Financiero', 'Financiero'),
+        ('Inmobiliario', 'Inmobiliario'),
+        ('Profesional', 'Profesional'),
+        ('Administrativo', 'Administrativo'),
+        ('Público', 'Público'),
+        ('Educación', 'Educación'),
+        ('Salud', 'Salud'),
+        ('Entretenimiento', 'Entretenimiento'),
+        ('Otros servicios', 'Otros servicios')
     ], validators=[DataRequired()])
     submit = SubmitField('Comenzar Evaluación')
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://hperezc97:geoHCP97@mysql-hperezc97.alwaysdata.net/hperezc97_nivelesmadurez')
@@ -101,8 +122,17 @@ def enviar_correo_resultados(evaluacion):
             <p>¡Gracias por completar la evaluación!</p>
             <p>Estimados {evaluacion.empresa},</p>
             <p>Adjunto encontrará los resultados de su evaluación de gestión del riesgo empresarial.</p>
-            <p>Puntaje total obtenido: {evaluacion.calcular_puntaje_total():.2f}%</p>
-            <p>Sector: {evaluacion.sector}</p>
+            <p><strong>Datos de la evaluación:</strong></p>
+            <ul>
+                <li>Empresa: {evaluacion.empresa}</li>
+                <li>Responsable: {evaluacion.responsable}</li>
+                <li>Cargo/Rol: {evaluacion.rol}</li>
+                <li>Teléfono Fijo: {evaluacion.telefono_fijo or 'No especificado'}</li>
+                <li>Celular: {evaluacion.celular}</li>
+                <li>Email: {evaluacion.email}</li>
+                <li>Sector: {evaluacion.sector}</li>
+                <li>Puntaje total obtenido: {evaluacion.calcular_puntaje_total():.2f}%</li>
+            </ul>
             <br>
             <p>Para ver los resultados detallados en línea, visite: <a href="{resultados_url}">Ver Resultados Detallados</a></p>
             <br>
@@ -124,11 +154,24 @@ def enviar_correo_resultados(evaluacion):
         
         msg_institucion.html = f"""
             <h2>Nueva Evaluación Completada</h2>
+            <h3>Datos de la Empresa:</h3>
             <p><strong>Empresa:</strong> {evaluacion.empresa}</p>
-            <p><strong>Email:</strong> {evaluacion.email}</p>
+            <p><strong>NIT:</strong> {evaluacion.nit}</p>
+            <p><strong>Departamento:</strong> {evaluacion.departamento}</p>
+            <p><strong>Ciudad/Municipio:</strong> {evaluacion.ciudad}</p>
+            <p><strong>Cantidad de Empleados:</strong> {evaluacion.cantidad_empleados}</p>
             <p><strong>Sector:</strong> {evaluacion.sector}</p>
-            <p><strong>Puntaje Total:</strong> {evaluacion.calcular_puntaje_total():.2f}%</p>
+
+            <h3>Datos del Responsable:</h3>
+            <p><strong>Nombre:</strong> {evaluacion.responsable}</p>
+            <p><strong>Cargo/Rol:</strong> {evaluacion.rol}</p>
+            <p><strong>Teléfono Fijo:</strong> {evaluacion.telefono_fijo or 'No especificado'}</p>
+            <p><strong>Celular:</strong> {evaluacion.celular}</p>
+            <p><strong>Email:</strong> {evaluacion.email}</p>
+
+            <h3>Información de la Evaluación:</h3>
             <p><strong>Fecha:</strong> {evaluacion.fecha.strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p><strong>Puntaje Total:</strong> {evaluacion.calcular_puntaje_total():.2f}%</p>
             
             <h3>Puntajes por Dimensión:</h3>
             <ul>
@@ -279,7 +322,7 @@ class RegulacionesResilienciaForm(FlaskForm):
         'PT1. Adopción de certificaciones internacionales',
         choices=[
             ('0', 'No se adoptan certificaciones, estandares o buenas practicas de carácter internacional (ISO 31000, 31010, OSHAS, PIARC, SPANCOLD, ICOLD)'),
-            ('1', 'Existen POAs proyectados a nivel organizaciónal para la adopcion de certificaciones, estandares o buenas practicas de carácter internacional.'),
+            ('1', 'Existen POAs proyectados a nivel organizacional para la adopcion de certificaciones, estandares o buenas practicas de carácter internacional.'),
             ('2', 'Se estan ejecutando POAs con miras a adoptar certificaciones, estandares o buenas practicas de carácter internacional'),
             ('3', 'Se cuenta con al menos una certificacion, estandar o buena practica de carácter internacional a nivel organizacional.'),
             ('4', 'Se cuenta con varias certificaciones, estandares o buenas practicas de carácter internacional en varias areas de la organización.')
@@ -604,7 +647,7 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Sistema de Evaluación de Gestión del Riesgo')
+    return render_template('index.html', title='Sistema de Evaluación de Gestión del Riesgo Organizacional')
 
 @app.route('/procesos-gestion/<int:evaluacion_id>', methods=['GET', 'POST'])
 def procesos_gestion(evaluacion_id):
@@ -647,7 +690,7 @@ def resultados(evaluacion_id):
                                 dimension_weights=DIMENSION_WEIGHTS,
                                 component_weights=COMPONENT_WEIGHTS)
         
-        # Si no está completa, solo usuarios autenticados
+        # Si no esta completa, solo usuarios autenticados
         elif current_user.is_authenticated:
             return render_template('resultados.html',
                                 evaluacion=evaluacion,
@@ -882,21 +925,70 @@ def delete_evaluacion(id):
 @app.route('/iniciar_evaluacion', methods=['GET', 'POST'])
 def iniciar_evaluacion():
     form = IniciarEvaluacionForm()
-    if form.validate_on_submit():
-        evaluacion = Evaluacion(
-            empresa=form.empresa.data,
-            email=form.email.data,
-            sector=form.sector.data
-        )
-        try:
-            db.session.add(evaluacion)
-            db.session.commit()
-            return redirect(url_for('procesos_gestion', evaluacion_id=evaluacion.id))
-        except Exception as e:
-            db.session.rollback()
-            flash('Error al crear la evaluación. Por favor intente nuevamente.', 'error')
-            print(str(e))
+    
+    # Cargar los departamentos
+    departamentos = Departamento.query.order_by(Departamento.nombre).all()
+    form.departamento.choices = [('', 'Seleccione un departamento')] + [
+        (dep.nombre, dep.nombre) for dep in departamentos
+    ]
+    
+    # Inicializar las opciones de ciudad
+    form.ciudad.choices = [('', 'Seleccione primero un departamento')]
+    
+    if request.method == 'POST':
+        # Si se seleccionó un departamento, cargar sus municipios
+        if form.departamento.data:
+            departamento = Departamento.query.filter_by(nombre=form.departamento.data).first()
+            if departamento:
+                municipios = Municipio.query.filter_by(departamento_id=departamento.id).all()
+                form.ciudad.choices = [('', 'Seleccione un municipio')] + [
+                    (m.nombre, m.nombre) for m in municipios
+                ]
+        
+        if form.validate_on_submit():
+            try:
+                evaluacion = Evaluacion(
+                    empresa=form.empresa.data,
+                    nit=form.nit.data,
+                    departamento=form.departamento.data,
+                    ciudad=form.ciudad.data,
+                    cantidad_empleados=form.cantidad_empleados.data,
+                    responsable=form.responsable.data,
+                    rol=form.rol.data,
+                    telefono_fijo=form.telefono_fijo.data,
+                    celular=form.celular.data,
+                    email=form.email.data,
+                    sector=form.sector.data,
+                    estado='incompleto'
+                )
+                
+                db.session.add(evaluacion)
+                db.session.commit()
+                
+                return redirect(url_for('procesos_gestion', evaluacion_id=evaluacion.id))
+                
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error al guardar la evaluación: {str(e)}")
+                flash('Error al guardar la evaluación: ' + str(e), 'error')
+        else:
+            print("Errores de validación:", form.errors)
+    
     return render_template('iniciar_evaluacion.html', form=form)
+
+@app.route('/get_municipios/<departamento_nombre>')
+def get_municipios(departamento_nombre):
+    try:
+        departamento = Departamento.query.filter_by(nombre=departamento_nombre).first()
+        if departamento:
+            municipios = Municipio.query.filter_by(departamento_id=departamento.id).order_by(Municipio.nombre).all()
+            return jsonify([{
+                'nombre': m.nombre
+            } for m in municipios])
+        return jsonify([])
+    except Exception as e:
+        print(f"Error al obtener municipios: {str(e)}")  # Debug
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/continuar_evaluacion/<int:evaluacion_id>')
 def continuar_evaluacion(evaluacion_id):
@@ -1025,8 +1117,38 @@ def get_graphs_data(evaluacion_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/test_locations')
+def test_locations():
+    departamentos = Departamento.query.all()
+    municipios = Municipio.query.all()
+    return jsonify({
+        'num_departamentos': len(departamentos),
+        'num_municipios': len(municipios),
+        'departamentos': [{'id': d.id, 'nombre': d.nombre} for d in departamentos],
+        'sample_municipios': [{'id': m.id, 'nombre': m.nombre, 'departamento_id': m.departamento_id} 
+                            for m in municipios[:10]]  # Muestra los primeros 10 municipios
+    })
+
+@app.route('/test_municipios/<int:departamento_id>')
+def test_municipios(departamento_id):
+    """Ruta de prueba para verificar municipios por departamento"""
+    try:
+        municipios = Municipio.query.filter_by(departamento_id=departamento_id).all()
+        total_municipios = Municipio.query.count()
+        departamento = Departamento.query.get(departamento_id)
+        
+        return jsonify({
+            'departamento': departamento.nombre if departamento else None,
+            'total_municipios_departamento': len(municipios),
+            'total_municipios_bd': total_municipios,
+            'municipios': [{'id': m.id, 'codigo': m.codigo, 'nombre': m.nombre} for m in municipios]
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 if __name__ == '__main__':
     with app.app_context():
+        # Crear las tablas si no existen
         db.create_all()
         
         # Crear usuario admin si no existe
@@ -1038,3 +1160,4 @@ if __name__ == '__main__':
             db.session.commit()
             
     app.run(debug=True)
+

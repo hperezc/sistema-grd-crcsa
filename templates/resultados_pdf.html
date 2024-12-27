@@ -344,6 +344,31 @@
             height: 100%;
             transition: width 0.3s ease;
         }
+
+        .contact-section {
+            margin: 40px 0;
+            page-break-inside: avoid;
+        }
+
+        .contact-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #dc3545;
+        }
+
+        .contact-section ul {
+            margin: 15px 0;
+        }
+
+        .contact-section li {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .contact-section p {
+            color: #666;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -508,8 +533,32 @@
         <p><strong>Visualización Interactiva:</strong> Puede ver los resultados detallados en: <a href="{{ resultados_url }}">{{ resultados_url }}</a></p>
     </div>
 
+    <div class="contact-section">
+        <h3 style="color: #dc3545; margin-bottom: 20px;">¿Necesita apoyo adicional?</h3>
+        
+        <div style="background: #f8f9fa; border-left: 4px solid #dc3545; padding: 20px; margin-bottom: 30px;">
+            <p style="margin-bottom: 15px;">
+                La Cruz Roja Colombiana Seccional Antioquia ofrece servicios especializados para fortalecer la gestión del riesgo en su organización:
+            </p>
+            
+            <ul style="list-style-type: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 10px; padding-left: 20px;">• Asesoría en planes de emergencia y contingencia</li>
+                <li style="margin-bottom: 10px; padding-left: 20px;">• Capacitaciones en primeros auxilios y brigadas de emergencia</li>
+                <li style="margin-bottom: 10px; padding-left: 20px;">• Análisis de vulnerabilidad y riesgo</li>
+                <li style="margin-bottom: 10px; padding-left: 20px;">• Acompañamiento en simulacros y ejercicios prácticos</li>
+            </ul>
+            
+            <div style="margin-top: 20px;">
+                <p style="margin-bottom: 5px;"><strong>Para más información sobre nuestros servicios, contáctenos:</strong></p>
+                <p style="color: #dc3545;">
+                    ejecutivocomercialvc@crantioquia.org.co
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
-        <p>© Cruz Roja Colombiana - {{ evaluacion.fecha.strftime('%Y') }} | Documento Confidencial</p>
+        <p>© Cruz Roja Colombiana Seccional Antioquia - {{ evaluacion.fecha.strftime('%Y') }} | Documento Confidencial</p>
     </div>
 </body>
 </html>

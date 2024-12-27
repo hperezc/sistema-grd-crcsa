@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{% if title %}{{ title }} - {% endif %}Sistema de Evaluación de Gestión del Riesgo</title>
+    <title>{% if title %}{{ title }} - {% endif %}Sistema de Evaluación de Gestión del Riesgo Organizacional</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -86,7 +86,7 @@
         <div class="logo-container">
             <img src="{{ url_for('static', filename='img/logo-cruz-roja.png') }}" alt="Logo Cruz Roja Colombiana">
         </div>
-        <h1>Sistema de Evaluación de Gestión del Riesgo</h1>
+        <h1>Sistema de Evaluación de Gestión del Riesgo Organizacional</h1>
     </div>
 
     <!-- Flash Messages -->
@@ -120,5 +120,108 @@
             });
         });
     </script>
+
+    <!-- Agregar antes del cierre del body -->
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center mb-3">
+                    <img src="{{ url_for('static', filename='img/logo-cruz-roja.png') }}" alt="Cruz Roja Colombiana" height="40" class="footer-logo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h6 class="text-danger mb-3">Cruz Roja Colombiana Seccional Antioquia</h6>
+                    <p class="mb-2"><strong>Equipo de Gestión del Riesgo de Desastres</strong></p>
+                    <div class="credits-text">
+                        <p class="mb-1">Líder de Gestión del Riesgo: Juan Pablo Salcedo Tuiran</p>
+                        <p class="mb-1">Analista en Gestión del Riesgo: Juan Manuel Agudelo Luna</p>
+                        <p class="mb-1">Analista en Geomática: Héctor Camilo Pérez Contreras</p>
+                    </div>
+                    <div class="contact-email mt-3 mb-2">
+                        <p class="mb-1">
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:ejecutivocomercialvc@crantioquia.org.co" class="text-danger text-decoration-none">
+                                ejecutivocomercialvc@crantioquia.org.co
+                            </a>
+                        </p>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted copyright-year">© {{ year }} Cruz Roja Colombiana Seccional Antioquia. Todos los derechos reservados.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Asegura que el footer siempre esté al final */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .credits-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .credits-text p {
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                font-size: 0.85rem;
+                padding: 1rem 0;
+            }
+        }
+
+        .footer-logo {
+            height: 40px;
+            width: auto;
+            /* Asegura que la imagen mantenga su proporción */
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .footer-logo {
+                height: 35px; /* Ligeramente más pequeño en móviles */
+            }
+        }
+
+        .contact-email {
+            font-size: 0.9rem;
+        }
+
+        .contact-email a:hover {
+            text-decoration: underline !important;
+        }
+
+        @media (max-width: 768px) {
+            .contact-email {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+
+    <!-- Agregar en la sección de scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Usar la clase específica para el año
+            const copyrightElement = document.querySelector('.copyright-year');
+            if (copyrightElement) {
+                const year = new Date().getFullYear();
+                copyrightElement.innerHTML = copyrightElement.innerHTML.replace('{{ year }}', year);
+            }
+        });
+    </script>
+
 </body>
 </html> 

@@ -47,7 +47,7 @@ def create_gauge_chart(evaluacion):
         number={'suffix': "%"},
         gauge={
             'axis': {'range': [0, 100]},
-            'bar': {'color': "#000000"},
+            'bar': {'color': "#e0e0e0"},
             'steps': [
                 {'range': [0, 40], 'color': "#dc3545"},
                 {'range': [40, 80], 'color': "#ffc107"},

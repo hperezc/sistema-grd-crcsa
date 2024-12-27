@@ -245,6 +245,44 @@
         </div>
     </div>
 </div>
+
+<!-- Tarjeta de Servicios -->
+<div class="container mb-5" data-aos="fade-up">
+    <div class="card border-danger shadow-sm">
+        <div class="card-header card-header-cruzroja">
+            <h4 class="text-white mb-0">
+                <i class="fas fa-handshake me-2"></i>Servicios Especializados
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="content-wrapper text-center">
+                <p class="lead mb-4">
+                    La Cruz Roja Colombiana Seccional Antioquia ofrece un portafolio integral de servicios especializados en gestión del riesgo.
+                </p>
+                
+                <div class="mb-4">
+                    <a href="https://gestiondelriesgo.crantioquia.org.co/" 
+                       target="_blank" 
+                       class="btn btn-danger btn-lg">
+                        <i class="fas fa-external-link-alt me-2"></i>
+                        Ver Portafolio Completo de Servicios
+                    </a>
+                </div>
+
+                <div class="contact-box mt-4">
+                    <p class="mb-2"><strong>Para más información sobre nuestros servicios, contáctenos:</strong></p>
+                    <div class="d-flex align-items-center justify-content-center email-wrapper">
+                        <i class="fas fa-envelope text-danger me-2"></i>
+                        <a href="mailto:ejecutivocomercialvc@crantioquia.org.co" class="text-danger hover-link text-break">
+                            ejecutivocomercialvc@crantioquia.org.co
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style type="text/css">
     .hover-scale {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -531,6 +569,33 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+    
+    .card.border-danger {
+        border-width: 1px;
+    }
+    
+    .contact-logo {
+        max-width: 200px;
+        height: auto;
+    }
+    
+    .list-unstyled li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+    
+    .list-unstyled li i {
+        position: absolute;
+        left: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .contact-logo {
+            max-height: 80px;
+            margin-top: 1rem;
         }
     }
 </style>

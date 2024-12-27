@@ -4,28 +4,143 @@
 <div class="container mt-5" data-aos="fade-up">
     <div class="card shadow-lg hover-card">
         <div class="card-header card-header-cruzroja">
-            <h2 class="text-center mb-0">Nueva Evaluación</h2>
+            <h2 class="text-center mb-0 text-white">Nueva Evaluación</h2>
         </div>
         <div class="card-body">
-            <form method="POST">
+            <div class="text-muted mb-4">
+                Los campos marcados con <span class="text-danger">*</span> son obligatorios
+            </div>
+            
+            <form method="POST" action="{{ url_for('iniciar_evaluacion') }}">
                 {{ form.csrf_token }}
-                <div class="mb-4">
-                    {{ form.empresa.label(class="form-label") }}
-                    {{ form.empresa(class="form-control hover-scale", placeholder="Nombre de la empresa") }}
+                
+                <!-- Empresa y NIT -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        {{ form.empresa.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.empresa(class="form-control hover-scale", placeholder="Nombre de la empresa") }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.nit.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.nit(class="form-control hover-scale", placeholder="NIT") }}
+                    </div>
                 </div>
+
+                <!-- Departamento y Ciudad -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        {{ form.departamento.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.departamento(class="form-control hover-scale", id="departamento", placeholder="Departamento") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.ciudad.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.ciudad(class="form-control hover-scale", id="ciudad", placeholder="Ciudad") }}
+                    </div>
+                </div>
+
+                <!-- Cantidad de empleados y Sector -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        {{ form.cantidad_empleados.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.cantidad_empleados(class="form-control hover-scale", placeholder="Número de empleados") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.sector.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.sector(class="form-control hover-scale") }}
+                    </div>
+                </div>
+
+                <!-- Responsable y Rol -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        
+                        {{ form.responsable.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.responsable(class="form-control hover-scale", placeholder="Nombre completo del responsable") }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.rol.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.rol(class="form-control hover-scale", placeholder="Cargo o rol") }}
+                    </div>
+                </div>
+
+                <!-- Teléfonos -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        {{ form.telefono_fijo.label(class="form-label") }} <small class="text-muted">(Opcional)</small>
+                        {{ form.telefono_fijo(class="form-control hover-scale", placeholder="Teléfono fijo") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.celular.label(class="form-label") }} <span class="text-danger">*</span>
+                        {{ form.celular(class="form-control hover-scale", placeholder="Número de celular") }}
+                    </div>
+                </div>
+
+                <!-- Email -->
                 <div class="mb-4">
-                    {{ form.email.label(class="form-label") }}
+                    {{ form.email.label(class="form-label") }} <span class="text-danger">*</span>
                     {{ form.email(class="form-control hover-scale", placeholder="correo@ejemplo.com") }}
                 </div>
-                <div class="mb-4">
-                    {{ form.sector.label(class="form-label") }}
-                    {{ form.sector(class="form-control hover-scale") }}
-                </div>
+
                 <div class="text-center">
-                    {{ form.submit(class="btn btn-primary btn-lg pulse-button") }}
+                    {{ form.submit(class="btn btn-primary") }}
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    #sector {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    #sector option:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departamentoSelect = document.getElementById('departamento');
+    const ciudadSelect = document.getElementById('ciudad');
+    
+    departamentoSelect.addEventListener('change', function() {
+        const departamentoNombre = this.value;
+        console.log('Departamento seleccionado:', departamentoNombre);
+        
+        // Resetear el select de ciudad
+        ciudadSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
+        
+        if (departamentoNombre) {
+            fetch(`/get_municipios/${encodeURIComponent(departamentoNombre)}`)
+                .then(response => response.json())
+                .then(municipios => {
+                    console.log('Municipios recibidos:', municipios);
+                    municipios.forEach(municipio => {
+                        const option = document.createElement('option');
+                        option.value = municipio.nombre;
+                        option.textContent = municipio.nombre;
+                        ciudadSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sectorSelect = document.getElementById('sector');
+    
+    // Opcional: Agregar búsqueda en el select
+    $(sectorSelect).select2({
+        placeholder: "Seleccione un sector",
+        allowClear: true
+    });
+});
+</script>
 {% endblock %} 

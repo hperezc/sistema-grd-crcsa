@@ -10,9 +10,17 @@ class Evaluacion(db.Model):
     __tablename__ = 'evaluacion'
     
     id = db.Column(db.Integer, primary_key=True)
-    empresa = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), nullable=True)
-    sector = db.Column(db.String(50), nullable=True)
+    empresa = db.Column(db.String(100))
+    nit = db.Column(db.String(20))
+    departamento = db.Column(db.String(100))
+    ciudad = db.Column(db.String(100))
+    cantidad_empleados = db.Column(db.Integer)
+    responsable = db.Column(db.String(100))
+    rol = db.Column(db.String(100))
+    telefono_fijo = db.Column(db.String(20))
+    celular = db.Column(db.String(20))
+    email = db.Column(db.String(100))
+    sector = db.Column(db.String(50))
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
     estado = db.Column(db.String(20), default='incompleto')
     ultima_dimension = db.Column(db.String(50))
@@ -104,7 +112,7 @@ class Evaluacion(db.Model):
                     return diagnostico
                     
             # Si no encuentra un rango que coincida
-            print(f"No se encontró diagn��stico para dimensión {dimension} con puntaje {puntaje}")
+            print(f"No se encontró diagnóstico para dimensión {dimension} con puntaje {puntaje}")
             return "No hay diagnóstico disponible"
             
         except Exception as e:
@@ -132,3 +140,17 @@ class Admin(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class Departamento(db.Model):
+    __tablename__ = 'departamentos'
+    id = db.Column(db.Integer, primary_key=True)
+    codigo = db.Column(db.String(10))
+    nombre = db.Column(db.String(100))
+    municipios = db.relationship('Municipio', backref='departamento', lazy=True)
+
+class Municipio(db.Model):
+    __tablename__ = 'municipios'
+    id = db.Column(db.Integer, primary_key=True)
+    codigo = db.Column(db.String(10))
+    nombre = db.Column(db.String(100))
+    departamento_id = db.Column(db.Integer, db.ForeignKey('departamentos.id'))
