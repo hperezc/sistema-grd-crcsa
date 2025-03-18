@@ -146,10 +146,14 @@ def enviar_correo_resultados(evaluacion):
             pdf_content
         )
         
+        # Obtener correos institucionales y convertirlos en lista
+        correos_institucionales_str = os.getenv('INSTITUCION_EMAIL', 'correo_institucion@ejemplo.com')
+        correos_institucionales = [correo.strip() for correo in correos_institucionales_str.split(',') if correo.strip()]
+        
         # Mensaje para la institución
         msg_institucion = Message(
             f'Nueva Evaluación Completada - {evaluacion.empresa}',
-            recipients=[os.getenv('INSTITUCION_EMAIL', 'correo_institucion@ejemplo.com')]
+            recipients=correos_institucionales
         )
         
         msg_institucion.html = f"""
