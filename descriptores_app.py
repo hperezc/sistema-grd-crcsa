@@ -39,6 +39,7 @@ import time
 import threading
 import requests
 from flask_caching import Cache
+from api import api
 
 load_dotenv()
 
@@ -77,7 +78,7 @@ class IniciarEvaluacionForm(FlaskForm):
     ], validators=[DataRequired()])
     submit = SubmitField('Comenzar Evaluación')
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'tu_clave_secreta'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://hperezc97:geoHCP97@mysql-hperezc97.alwaysdata.net/hperezc97_nivelesmadurez')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -146,10 +147,14 @@ def enviar_correo_resultados(evaluacion):
             pdf_content
         )
         
+        # Obtener correos institucionales y convertirlos en lista
+        correos_institucionales_str = os.getenv('INSTITUCION_EMAIL', 'correo_institucion@ejemplo.com')
+        correos_institucionales = [correo.strip() for correo in correos_institucionales_str.split(',') if correo.strip()]
+        
         # Mensaje para la institución
         msg_institucion = Message(
             f'Nueva Evaluación Completada - {evaluacion.empresa}',
-            recipients=[os.getenv('INSTITUCION_EMAIL', 'correo_institucion@ejemplo.com')]
+            recipients=correos_institucionales
         )
         
         msg_institucion.html = f"""
@@ -1031,6 +1036,9 @@ def dashboard_analitico():
 
 # Inicializar el dashboard
 init_dashboard(app)
+
+# Registrar el blueprint de la API
+app.register_blueprint(api, url_prefix='/api/v1')
 
 def verificar_evaluacion_completa(evaluacion, seccion=None):
     campos_por_seccion = {
