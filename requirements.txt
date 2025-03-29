@@ -19,3 +19,4 @@ python-dotenv
 email_validator
 requests==2.31.0
 flask-caching==2.0.2
+PyJWT==2.8.0
