@@ -20,9 +20,24 @@ Sistema web desarrollado para la Cruz Roja Colombiana Seccional Antioquia, dise�
 - 📄 Generación automática de informes PDF personalizados
 - 📧 Envío automático de resultados por correo electrónico
 - 🔒 Panel de administración para gestión de evaluaciones
+- 🔌 API REST para integración con sistemas externos
+
+### API para Integraciones
+El sistema cuenta con una API REST completa que permite:
+- Autenticación segura mediante tokens JWT
+- Consulta de listados de evaluaciones
+- Obtención de detalles completos de evaluaciones específicas
+- Acceso a resultados y puntajes
+
+Para más información sobre la API, consulte la [documentación de la API](docs/api-documentation.md).
+
+### Documentación de Seguridad y Servicio
+Este proyecto cuenta con documentación formal sobre:
+- [Políticas de Seguridad](docs/security-policy.md)
+- [Acuerdo de Nivel de Servicio (SLA)](docs/service-level-agreement.md)
 
 ### Acceso al Sistema
-Visite ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) para acceder al sistema.
+Visite [https://sistema-grd-crcsa.onrender.com/](https://sistema-grd-crcsa.onrender.com/) para acceder al sistema.
 
 ### Uso del Sistema
 1. Acceda a la página principal
@@ -50,9 +65,24 @@ Web system developed for the Colombian Red Cross Antioquia Section, designed to 
 - 📄 Automatic generation of customized PDF reports
 - 📧 Automatic email delivery of results
 - 🔒 Admin panel for assessment management
+- 🔌 REST API for integration with external systems
+
+### API for Integrations
+The system provides a complete REST API that allows:
+- Secure authentication using JWT tokens
+- Querying evaluation listings
+- Obtaining complete details of specific evaluations
+- Accessing results and scores
+
+For more information about the API, see the [API documentation](docs/api-documentation.md).
+
+### Security and Service Documentation
+This project has formal documentation on:
+- [Security Policies](docs/security-policy.md)
+- [Service Level Agreement (SLA)](docs/service-level-agreement.md)
 
 ### System Access
-Visit ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/))  to access the system.
+Visit [https://sistema-grd-crcsa.onrender.com/](https://sistema-grd-crcsa.onrender.com/) to access the system.
 
 ### System Usage
 1. Access the main page
@@ -63,6 +93,6 @@ Visit ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onr
 
 ### Contact
 - 📧 Email: hectorcperez21@gmail.com
-- 🌐 Website: ([(https://sistema-grd-crcsa.onrender.com/)](https://sistema-grd-crcsa.onrender.com/)) 
+- 🌐 Website: [https://sistema-grd-crcsa.onrender.com/](https://sistema-grd-crcsa.onrender.com/)
 
 ---
