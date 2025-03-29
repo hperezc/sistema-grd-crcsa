@@ -159,10 +159,9 @@ Medidas implementadas contra:
 
 Para reportar problemas de seguridad, contactar a:
 - Email: [hectorcperez21@gmail.com](mailto:hectorcperez21@gmail.com)
-- Sistema de Gestión de Incidentes: [URL del sistema]
 
 ---
 
 Documento versión: 1.0  
-Fecha última actualización: [Fecha actual]  
-Aprobado por: [Tu nombre], Analista de Geomática, Cruz Roja Colombiana Seccional Antioquia
+Fecha última actualización: 29-03-2025
+Aprobado por: Héctor Camilo Pérez Contreras, Analista en Sistemas de Información Geográfica, Cruz Roja Colombiana Seccional Antioquia

@@ -42,8 +42,7 @@ El sistema garantiza una disponibilidad del 99.5% durante las horas operativas, 
 
 ### 3.1 Canales de Soporte
 - Email: [hectorcperez21@gmail.com](mailto:hectorcperez21@gmail.com)
-- Teléfono: [Tu número de contacto]
-- Sistema de tickets: [Si existe]
+- Teléfono: 3107763436
 
 ### 3.2 Categorización de Incidentes
 
@@ -170,5 +169,5 @@ El cumplimiento de este SLA será medido y reportado mensualmente.
 ---
 
 Documento versión: 1.0  
-Fecha última actualización: [Fecha actual]  
-Aprobado por: [Tu nombre], Analista de Geomática, Cruz Roja Colombiana Seccional Antioquia
+Fecha última actualización: 29-03-2025
+Aprobado por: Héctor Camilo Pérez Contreras, Analista en Sistemas de Información Geográfica, Cruz Roja Colombiana Seccional Antioquia
