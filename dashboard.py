@@ -25,10 +25,14 @@ def init_dashboard(server):
     dash_app = dash.Dash(
         server=server,
         routes_pathname_prefix='/dashboard/',
+        requests_pathname_prefix='/autodiagnostico_GR/dashboard/',
+        external_scripts=[
+            'https://cdn.plot.ly/plotly-3.3.1.min.js'
+        ],
         external_stylesheets=[
             'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
             'https://use.fontawesome.com/releases/v5.15.4/css/all.css',
-            '/static/dashboard.css'
+            '/autodiagnostico_GR/static/dashboard.css'
         ]
     )
 

@@ -102,6 +102,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const baseUrl = "{{ url_for('index') }}".replace(/\/$/, '');
     const departamentoSelect = document.getElementById('departamento');
     const ciudadSelect = document.getElementById('ciudad');
     
@@ -113,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ciudadSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
         
         if (departamentoNombre) {
-            fetch(`/get_municipios/${encodeURIComponent(departamentoNombre)}`)
+            fetch(`${baseUrl}/get_municipios/${encodeURIComponent(departamentoNombre)}`)
                 .then(response => response.json())
                 .then(municipios => {
                     console.log('Municipios recibidos:', municipios);

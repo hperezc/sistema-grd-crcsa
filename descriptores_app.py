@@ -1032,7 +1032,7 @@ def editar_evaluacion(evaluacion_id):
 
 @app.route('/dashboard-analitico')
 def dashboard_analitico():
-    return redirect('/dashboard')
+    return redirect('/autodiagnostico_GR/dashboard/')
 
 # Inicializar el dashboard
 init_dashboard(app)

@@ -601,17 +601,18 @@
 </style>
 
 <!-- Scripts -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-3.3.1.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const baseUrl = "{{ url_for('index') }}".replace(/\/$/, '');
     const evaluacionId = {{ evaluacion.id }};
     const config = {
         responsive: true,
         displayModeBar: false
     };
 
-    fetch(`/get_graphs_data/${evaluacionId}`)
+    fetch(`${baseUrl}/get_graphs_data/${evaluacionId}`)
         .then(response => response.json())
         .then(data => {
             // Crear cada gráfico usando Plotly
@@ -651,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generando PDF...';
 
         // Hacer la petición
-        window.location.href = `/exportar_pdf/${evaluacionId}`;
+        window.location.href = `${baseUrl}/exportar_pdf/${evaluacionId}`;
 
         // Restaurar el botón después de un tiempo razonable
         setTimeout(() => {
@@ -686,7 +687,7 @@ function enviarCorreo(evaluacionId) {
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Enviando...';
     
     // Hacer la petición
-    fetch(`/enviar_correo/${evaluacionId}`)
+    fetch(`${baseUrl}/enviar_correo/${evaluacionId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
