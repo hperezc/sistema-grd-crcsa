@@ -1,0 +1,37 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/phi_gis_platform/autodiagnostico
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Activate virtual environment and update dependencies if needed
+            source /opt/phi_gis_platform/venv/bin/activate
+            if git diff HEAD~1 --name-only | grep -q 'requirements.txt'; then
+              pip install -r requirements.txt
+            fi
+            
+            # Restart Autodiagnostico service
+            sudo systemctl restart autodiagnostico
+            
+            # Verify service is running
+            sleep 3
+            sudo systemctl is-active autodiagnostico
+            
+            echo '✅ Autodiagnóstico deployment complete!'
